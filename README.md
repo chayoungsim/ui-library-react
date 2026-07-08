@@ -1,61 +1,65 @@
-# React + TypeScript + Vite
+# ui-library
 
-## === 생산성 극대화 : 내부 자산(Asset) 고도화 ===
+React 19 + TypeScript + SCSS 기반 사내 UI 컴포넌트 라이브러리입니다.
 
-### 1. 공통 UI 라이브러리 구축
+## 시작하기
 
-### 2. 디자인시스템 구축
-
-### 3. UI패턴 모음 제작
-
-### 4. 접근성 개선
-
-### 5. 성능개선
-
-```
-- 이미지 최적화
-- Lazy Loading
-- Font 최적화
-- CSS 최적화
-- JS 최적화
+```bash
+npm install
 ```
 
-### 6. GSAP 모션 라이브러리 제작
+## 개발
 
-### 7. 퍼블리싱 가이드 제작
+컴포넌트를 브라우저에서 직접 확인할 수 있는 데모 앱(`src/App.tsx`)을 실행합니다.
 
-### 8. 사내 템플릿 제작
-
-```
-- HTML Starter
-- React Starter
-- Next Starter
-- GSAP Starter
+```bash
+npm run dev
 ```
 
-## === 기술확장 ===
+## Storybook
 
-### 1. React
+컴포넌트 카탈로그와 문서를 확인합니다.
 
-### 2. Next.js
-
-### 3. TypeScript
-
-### 4. GSAP
-
-## === 업무 프로세스 효율화: AI 워크플로우 도입 ===
-
-### 1. AI 활용 연구 (Claude Code 같은 AI 도구로 반복 작업 자동화)
-
-### 2. AI 활용 체계(AI Workflow) 구축
-
-### 3. 코드 검증 자동화, 리팩토링 프롬프트 가이드
-
-## === 실행 ===
-
+```bash
+npm run storybook          # 개발 서버 (http://localhost:6006)
+npm run build-storybook    # 정적 산출물 빌드 (storybook-static/)
 ```
-# 실무형 UI 라이브러리 구축 프로젝트 진행 UI Library
-# 공통 UI 컴포넌트/인터랙션 코드
-# 자동화·효율화 도구 정비, 자주 쓰는 컴포넌트 스니펫, ESLint/Prettier/Stylelint 설정
-# AI Agent 구축 ( AI Publisher Assistant )
+
+## 테스트
+
+```bash
+npm run test          # 전체 테스트 1회 실행
+npm run test:watch    # watch 모드
 ```
+
+## 린트 / 포맷
+
+```bash
+npm run lint             # ESLint (ts/tsx)
+npm run lint:style       # Stylelint (scss)
+npm run lint:style:fix
+npm run format           # Prettier 전체 적용
+npm run format:check
+```
+
+## 빌드
+
+```bash
+npm run build       # 데모 앱(SPA) 빌드
+npm run build:lib   # 라이브러리 배포용 빌드 (dist/에 ESM/CJS + 타입 선언 + CSS 생성)
+```
+
+> `package.json`은 현재 `"private": true`로 배포가 비활성화되어 있습니다. 배포처(사내 npm 레지스트리 등)가 정해지면 `private` 필드를 조정하세요.
+
+## 컴포넌트 작성 표준
+
+새 컴포넌트를 추가할 때는 [`src/components/README.md`](src/components/README.md)의 폴더 구조와 규칙(forwardRef, 타입 분리, 배럴 export, BEM 스타일)을 따르세요. `Button` 컴포넌트가 참고 구현입니다.
+
+## 현재 구현 상태
+
+- 실구현: `Button`
+- 스캐폴딩(빈 폴더, 미구현): `Accordion`, `Breadcrumb`, `Checkbox`, `Input`, `Modal`, `Pagination`, `Radio`, `Select`, `Table`, `Tabs`, `Tooltip`
+
+## 기타 문서
+
+- [`docs/roadmap.md`](docs/roadmap.md): 사내 조직 차원의 로드맵/아이디어 메모

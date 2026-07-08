@@ -4,10 +4,7 @@ import path from 'node:path'
 import dts from 'unplugin-dts/vite'
 
 export default defineConfig({
-  plugins: [
-    react(),
-    dts({ tsconfigPath: './tsconfig.build.json' }),
-  ],
+  plugins: [react(), dts({ tsconfigPath: './tsconfig.build.json' })],
   publicDir: false,
   resolve: {
     alias: {
