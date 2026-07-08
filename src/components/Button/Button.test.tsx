@@ -1,7 +1,7 @@
 import { createRef } from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import Button from './Button'
+import Button from '.'
 
 describe('Button', () => {
   it('기본 variant/size 클래스를 렌더링한다', () => {
