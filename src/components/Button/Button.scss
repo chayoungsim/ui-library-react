@@ -9,6 +9,7 @@
 .btn {
   // --- 기본 구조 및 레이아웃 ---
   @include flex-c; // 가로, 세로 중앙 정렬
+
   position: relative;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -144,9 +145,10 @@
 
   &__loader {
     @include abs-center; // 절대 위치 중앙 정렬
+
     width: 1.8rem;
     height: 1.8rem;
-    border: 2px solid currentColor;
+    border: 2px solid currentcolor;
     border-bottom-color: transparent;
     border-radius: 50%;
     animation: spin 0.75s linear infinite;

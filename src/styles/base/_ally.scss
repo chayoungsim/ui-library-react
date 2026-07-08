@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
 }
+
 #accessibility {
   a {
     display: block;
@@ -11,21 +12,22 @@
     margin-bottom: -1px;
     overflow: hidden;
     text-align: center;
-    color: #000000;
+    color: #000;
     white-space: nowrap;
+
     &:focus,
     &:active {
       position: absolute;
       height: auto;
-      width: 100%;
       padding: 5px;
       margin-bottom: 10px;
       width: 100%;
-      background: #ffffff;
+      background: #fff;
       z-index: 9999;
     }
   }
 }
+
 caption,
 .hidden,
 .blind {
@@ -35,6 +37,6 @@ caption,
   margin: -1px;
   padding: 0;
   border: 0;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   overflow: hidden;
 }
