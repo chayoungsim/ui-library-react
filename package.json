@@ -3,9 +3,28 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./dist/ui-library.cjs",
+  "module": "./dist/ui-library.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/ui-library.js",
+      "require": "./dist/ui-library.cjs"
+    },
+    "./style.css": "./dist/ui-library.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:lib": "vite build --config vite.lib.config.ts",
     "lint": "eslint .",
     "lint:style": "stylelint \"src/**/*.scss\"",
     "lint:style:fix": "stylelint \"src/**/*.scss\" --fix",
@@ -17,7 +36,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "dependencies": {
+  "peerDependencies": {
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
@@ -41,6 +60,8 @@
     "globals": "^17.7.0",
     "jsdom": "^29.1.1",
     "prettier": "^3.9.4",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "sass": "^1.101.0",
     "storybook": "^10.4.6",
     "stylelint": "^17.14.0",
@@ -48,6 +69,7 @@
     "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
+    "unplugin-dts": "^1.0.3",
     "vite": "^8.1.1",
     "vitest": "^4.1.10"
   }
