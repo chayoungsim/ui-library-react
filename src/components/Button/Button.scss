@@ -1,0 +1,160 @@
+@use "@/styles/abstracts/breakpoints" as *;
+@use "@/styles/abstracts/mixins" as *;
+@use "@/styles/abstracts/variables" as *;
+
+/* ==========================================================================
+   Button Component
+   ========================================================================== */
+
+.btn {
+  // --- 기본 구조 및 레이아웃 ---
+  @include flex-c; // 가로, 세로 중앙 정렬
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.1s ease;
+
+  // --- 접근성 ---
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /*
+   * ==========================================================================
+   * 1. 크기 (Size)
+   * ==========================================================================
+   */
+  &--sm {
+    height: 3.2rem;
+    padding: 0 1.2rem;
+    font-size: 1.4rem;
+    gap: 0.4rem;
+  }
+
+  &--md {
+    height: 4rem;
+    padding: 0 1.6rem;
+    font-size: 1.6rem;
+    gap: 0.6rem;
+  }
+
+  &--lg {
+    height: 4.8rem;
+    padding: 0 2.4rem;
+    font-size: 1.8rem;
+    gap: 0.8rem;
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 종류 (Variant)
+   * ==========================================================================
+   */
+
+  // --- Primary ---
+  &--primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-hover);
+    }
+  }
+
+  // --- Secondary ---
+  &--secondary {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-800);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-300); // 라이트 모드 hover
+    }
+
+    [data-theme="dark"] &:not(:disabled),
+    :root:not([data-theme="light"]) &:hover:not(:disabled) {
+      background-color: var(--color-gray-700); // 다크 모드 hover
+      color: var(--color-gray-100);
+    }
+  }
+
+  // --- Outline ---
+  &--outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+
+    &:hover:not(:disabled) {
+      background-color: rgba($color-primary, 0.05);
+    }
+  }
+
+  // --- Ghost ---
+  &--ghost {
+    background-color: transparent;
+    color: var(--color-primary);
+
+    &:hover:not(:disabled) {
+      background-color: rgba($color-primary, 0.05);
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 3. 상태 (State)
+   * ==========================================================================
+   */
+
+  &:active:not(:disabled) {
+    transform: scale(0.98); // 클릭 시 살짝 작아지는 효과
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // --- 로딩 상태 ---
+  &.is-loading {
+    .btn__text,
+    .btn__icon {
+      opacity: 0; // 로딩 중에는 텍스트와 아이콘 숨김
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 4. 내부 요소 (Elements)
+   * ==========================================================================
+   */
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__loader {
+    @include abs-center; // 절대 위치 중앙 정렬
+    width: 1.8rem;
+    height: 1.8rem;
+    border: 2px solid currentColor;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
