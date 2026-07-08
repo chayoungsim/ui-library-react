@@ -52,3 +52,13 @@ $spacing-paragraph: 1.6rem; // 16px
 
 // 5. Borders
 $border-width-base: 0.4rem;
+
+// 6. Radius
+// ==========================================================================
+$radius-none: 0;
+$radius-sm: 0.4rem;
+$radius-md: 0.8rem;
+$radius-lg: 1.2rem;
+$radius-xl: 1.6rem;
+$radius-full: 9999px;
+$radius-circle: 50%;

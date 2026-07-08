@@ -1,0 +1,12 @@
+@use "@/styles/abstracts/variables" as *;
+
+:root {
+  --font-family-base: #{$font-family-sans};
+  --font-weight-normal: #{$font-weight-normal};
+  --font-weight-bold: #{$font-weight-bold};
+  --font-size-base: #{$font-size-base};
+  --font-size-h1: #{$font-size-h1};
+  --font-size-h2: #{$font-size-h2};
+  --font-size-h3: #{$font-size-h3};
+  --font-size-h4: #{$font-size-h4};
+}
