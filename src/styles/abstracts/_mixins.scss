@@ -1,4 +1,4 @@
-@use "variables" as *;
+@use 'variables' as *;
 
 // ─────────────────────────────────────────────
 // 접근성
@@ -36,9 +36,9 @@
 
 // 테마별 CSS 변수를 생성하는 믹스인
 @mixin generate-theme-variables($theme-map) {
-    @each $name, $value in $theme-map {
-        --color-#{$name}: #{$value};
-    }
+  @each $name, $value in $theme-map {
+    --color-#{$name}: #{$value};
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -71,7 +71,9 @@
 @mixin flex-col($gap: null) {
   display: flex;
   flex-direction: column;
-  @if $gap { gap: $gap; }
+  @if $gap {
+    gap: $gap;
+  }
 }
 
 // ─────────────────────────────────────────────
@@ -159,7 +161,9 @@
 
 // 카드 hover 올라오는 효과
 @mixin lift($y: -0.4rem, $shadow: 0 1.2rem 2.4rem rgba(0, 0, 0, 0.12)) {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 
   &:hover,
   &:focus-visible {
@@ -172,7 +176,7 @@
 // 사용: @include overlay-gradient(180deg, 0.6)
 @mixin overlay-gradient($deg: 180deg, $opacity: 0.5) {
   &::after {
-    content: "";
+    content: '';
     @include abs-fill;
     background: linear-gradient($deg, transparent 30%, rgba(0, 0, 0, $opacity) 100%);
     pointer-events: none;
@@ -185,16 +189,16 @@
 
 // 텍스트 언더라인 grow 애니메이션 (초기 상태)
 @mixin text-underline-grow($color: var(--color-text), $height: 1px, $duration: 0.6s) {
-    background-image: linear-gradient(to right, #{$color}, #{$color});
-    background-size: 0 $height;
-    background-repeat: no-repeat;
-    background-position: left bottom;
-    transition: background-size $duration ease-in-out;
+  background-image: linear-gradient(to right, #{$color}, #{$color});
+  background-size: 0 $height;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  transition: background-size $duration ease-in-out;
 }
 
 // 텍스트 언더라인 grow 활성 상태 (hover 블록 안에서 사용)
 @mixin text-underline-grow-active($height: 1px) {
-    background-size: 100% $height;
+  background-size: 100% $height;
 }
 
 // 반응형 제목 축약
@@ -213,7 +217,9 @@
 @mixin fade-toggle($duration: 0.3s) {
   opacity: 0;
   visibility: hidden;
-  transition: opacity $duration ease, visibility $duration ease;
+  transition:
+    opacity $duration ease,
+    visibility $duration ease;
 
   &.is-visible {
     opacity: 1;
@@ -234,27 +240,27 @@
 
 @mixin custom-scrollbar($width: 6px, $thumb-color: #898989, $track-color: #ececec) {
   &::-webkit-scrollbar {
-      width: $width;
-      height: $width;
+    width: $width;
+    height: $width;
   }
   &::-webkit-scrollbar-thumb {
-      background-color: $thumb-color;
-      border-radius: 4px;
+    background-color: $thumb-color;
+    border-radius: 4px;
   }
   &::-webkit-scrollbar-track {
-      background-color: $track-color;
+    background-color: $track-color;
   }
 
   // 스크롤바 자리를 항상 확보하여 레이아웃 흔들림 방지
   scrollbar-gutter: stable;
-  
+
   // Firefox 대응 (표준 속성)
   scrollbar-width: thin;
   scrollbar-color: $thumb-color $track-color;
 }
 
 @mixin text-gradient($gradient-val) {
-  display:inline-block;
+  display: inline-block;
   background: $gradient-val;
   -webkit-background-clip: text;
   background-clip: text;

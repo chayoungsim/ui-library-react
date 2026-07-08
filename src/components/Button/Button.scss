@@ -1,6 +1,6 @@
-@use "@/styles/abstracts/breakpoints" as *;
-@use "@/styles/abstracts/mixins" as *;
-@use "@/styles/abstracts/variables" as *;
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
 
 /* ==========================================================================
    Button Component
@@ -80,8 +80,8 @@
       background-color: var(--color-gray-300); // 라이트 모드 hover
     }
 
-    [data-theme="dark"] &:not(:disabled),
-    :root:not([data-theme="light"]) &:hover:not(:disabled) {
+    [data-theme='dark'] &:not(:disabled),
+    :root:not([data-theme='light']) &:hover:not(:disabled) {
       background-color: var(--color-gray-700); // 다크 모드 hover
       color: var(--color-gray-100);
     }

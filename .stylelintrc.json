@@ -1,0 +1,9 @@
+{
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-prettier-scss"],
+  "rules": {
+    "scss/at-use-no-unnamespaced": null,
+    "selector-class-pattern": null,
+    "scss/dollar-variable-pattern": null
+  },
+  "ignoreFiles": ["dist/**", "storybook-static/**"]
+}

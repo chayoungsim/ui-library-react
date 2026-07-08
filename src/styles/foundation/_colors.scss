@@ -1,5 +1,5 @@
-@use "sass:color";
-@use "@/styles/abstracts/variables" as *;
+@use 'sass:color';
+@use '@/styles/abstracts/variables' as *;
 
 /**
  * Color System
@@ -37,7 +37,7 @@
 
 // Dark Mode: Applied when the user's OS is in dark mode OR when `data-theme="dark"` is set on the html element.
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root:not([data-theme='light']) {
     --color-background: #{$color-gray-900};
     --color-primary-hover: #{color.adjust($color-primary, $lightness: 10%)}; // 다크모드에서는 더 밝게
     --color-text: #{$color-gray-200};
@@ -46,7 +46,7 @@
   }
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --color-background: #{$color-gray-900};
   --color-primary-hover: #{color.adjust($color-primary, $lightness: 10%)}; // 다크모드에서는 더 밝게
   --color-text: #{$color-gray-200};
