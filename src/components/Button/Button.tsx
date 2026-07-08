@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type ReactNode } from 'react'
+import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from 'react'
 import './Button.scss'
 
 export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
@@ -27,17 +27,21 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   rightIcon?: ReactNode
 }
 
-const Button = ({
-  children,
-  variant = 'primary',
-  size = 'md',
-  loading = false,
-  disabled = false,
-  leftIcon,
-  rightIcon,
-  className,
-  ...props
-}: ButtonProps) => {
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    children,
+    variant = 'primary',
+    size = 'md',
+    loading = false,
+    disabled = false,
+    leftIcon,
+    rightIcon,
+    className,
+    type = 'button',
+    ...props
+  },
+  ref,
+) {
   const isDisabled = loading || disabled
 
   // 클래스 이름을 동적으로 조합합니다.
@@ -53,7 +57,8 @@ const Button = ({
 
   return (
     <button
-      type="button"
+      ref={ref}
+      type={type}
       className={buttonClasses}
       disabled={isDisabled}
       aria-disabled={isDisabled}
@@ -70,6 +75,8 @@ const Button = ({
       )}
     </button>
   )
-}
+})
+
+Button.displayName = 'Button'
 
 export default Button
