@@ -16,14 +16,7 @@ npm install
 npm run dev
 ```
 
-## Storybook
 
-컴포넌트 카탈로그와 문서를 확인합니다.
-
-```bash
-npm run storybook          # 개발 서버 (http://localhost:6006)
-npm run build-storybook    # 정적 산출물 빌드 (storybook-static/)
-```
 
 ## 테스트
 
