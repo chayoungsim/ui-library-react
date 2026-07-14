@@ -26,6 +26,7 @@ $color-background: $color-white;
 $color-text: #333;
 $color-link: $color-primary;
 $color-border: $color-gray-200;
+$color-error: #dc3545;
 
 // 2. Fonts
 // ==========================================================================
@@ -61,3 +62,9 @@ $radius-lg: 1.2rem;
 $radius-xl: 1.6rem;
 $radius-full: 9999px;
 $radius-circle: 50%;
+
+// 7. Paths
+// ==========================================================================
+// public/ 폴더 기준 절대경로. mask url()이 동적 파일명을 조합하므로
+// Vite가 빌드타임에 정적분석할 수 없어 public에 두고 절대경로로 참조한다.
+$url-imgs: '/assets/';
