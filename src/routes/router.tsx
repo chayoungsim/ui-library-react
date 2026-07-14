@@ -1,13 +1,11 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import type { IndexRouteObject, NonIndexRouteObject } from 'react-router-dom'
 
 import App from '../App.tsx'
 import Notfound from '../pages/error/Notfound.tsx'
 import Home from '../pages/main/Home.tsx'
 import Docs from '../pages/docs/Docs.tsx'
-import Atom from '../pages/atom/Atom.tsx'
 import Theme from '../pages/theme/Theme.tsx'
-import Layout from '../pages/layout/Layout.tsx'
 import Icons from '@/pages/icons/Icons.tsx'
 
 import ButtonPage from '../pages/atom/ButtonPage.tsx'
@@ -24,8 +22,11 @@ import AccordionPage from '@/pages/atom/AccordionPage.tsx'
 import TabsPage from '@/pages/atom/TabsPage.tsx'
 import CardPage from '@/pages/atom/CardPage.tsx'
 import SwitchPage from '@/pages/atom/SwitchPage.tsx'
+import HamburgerPage from '@/pages/atom/HamburgerPage.tsx'
 
 import HeaderPage from '@/pages/layout/HeaderPage.tsx'
+import SliderPage from '@/pages/layout/SliderPage.tsx'
+
 
 export type RouteHandle = {
   title: string
@@ -68,15 +69,14 @@ export const routes: AppRoute[] = [
       },
       {
         path: COMPONENTS_PATH,
-        handle: { title: 'Components' },
-        // 이 라우트 자체는 element가 없어 Outlet만 렌더링합니다.
-        // 그래서 Atom/ButtonPage/InputPage가 겹쳐지지 않고 하나만 단독으로 표시됩니다.
+        handle: { title: 'Components' },       
         children: [
           {
             index: true,
-            element: <Atom />,
+            element: <Navigate to={`${COMPONENTS_PATH}/button`} replace />,
           },
           {
+            
             path: `${COMPONENTS_PATH}/button`,
             handle: { title: 'Button' },
             element: <ButtonPage />,
@@ -146,6 +146,11 @@ export const routes: AppRoute[] = [
             handle: { title: 'Switch' },
             element: <SwitchPage />,
           },
+          {
+            path: `${COMPONENTS_PATH}/hamburger`,
+            handle: { title: 'Hamburger' },
+            element: <HamburgerPage />,
+          },
         ],
       },
       {
@@ -159,12 +164,17 @@ export const routes: AppRoute[] = [
         children: [
           {
             index: true,
-            element: <Layout />,
+            element: <Navigate to={`${LAYOUT_PATH}/header`} replace />,
           },
           {
             path: `${LAYOUT_PATH}/header`,
             handle: { title: 'Header' },
             element: <HeaderPage />,
+          },
+          {
+            path: `${LAYOUT_PATH}/slider`,
+            handle: { title: 'Slider' },
+            element: <SliderPage />,
           },
         ],
       },

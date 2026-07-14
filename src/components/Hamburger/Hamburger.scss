@@ -1,0 +1,214 @@
+@use '@/styles/abstracts/mixins' as *;
+
+/* ==========================================================================
+   Hamburger Component
+   ========================================================================== */
+
+.hamburger {
+  // --- 기본 구조 및 레이아웃 ---
+  @include flex-c;
+
+  padding: 0.6rem;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  // --- 접근성 ---
+  @include focus-ring;
+
+  /*
+   * ==========================================================================
+   * 1. 내부 요소 (Elements) — 막대 3개(위/중간/아래)는 모든 variant가 공유합니다.
+   * ==========================================================================
+   */
+  &__box {
+    position: relative;
+    display: inline-block;
+    width: 2.4rem;
+    height: 2rem;
+  }
+
+  &__inner,
+  &__inner::before,
+  &__inner::after {
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text);
+    border-radius: 1px;
+  }
+
+  &__inner {
+    top: 50%;
+    margin-top: -1px;
+
+    &::before,
+    &::after {
+      content: '';
+    }
+
+    &::before {
+      top: -8px;
+    }
+
+    &::after {
+      top: 8px;
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 크기 (Size)
+   * ==========================================================================
+   */
+  &--sm .hamburger__box {
+    width: 2rem;
+    height: 1.6rem;
+  }
+
+  &--sm .hamburger__inner::before {
+    top: -6px;
+  }
+
+  &--sm .hamburger__inner::after {
+    top: 6px;
+  }
+
+  &--lg .hamburger__box {
+    width: 3.2rem;
+    height: 2.4rem;
+  }
+
+  &--lg .hamburger__inner::before {
+    top: -10px;
+  }
+
+  &--lg .hamburger__inner::after {
+    top: 10px;
+  }
+
+  /*
+   * ==========================================================================
+   * 3. 종류 (Variant) — 마크업은 동일하고 트랜지션/최종 형태만 다릅니다.
+   * ==========================================================================
+   */
+
+  // --- spin: 가운데로 모인 뒤 한 바퀴(360도) 완전히 회전하고 나서 X자로 멈추는 모션 ---
+  &--spin .hamburger__inner,
+  &--spin .hamburger__inner::before,
+  &--spin .hamburger__inner::after {
+    transition:
+      top 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19) 0.2s,
+      transform 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+      background-color 0.2s ease;
+  }
+
+  &--spin.is-open .hamburger__inner {
+    background-color: transparent;
+  }
+
+  &--spin.is-open .hamburger__inner::before,
+  &--spin.is-open .hamburger__inner::after {
+    top: 0;
+    transition:
+      top 0.2s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+      transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1) 0.2s;
+  }
+
+  // 405deg = 360deg(한 바퀴) + 45deg → 한 바퀴 돈 뒤 X자 위치(45deg)에서 멈춥니다.
+  &--spin.is-open .hamburger__inner::before {
+    transform: rotate(225deg);
+  }
+
+  &--spin.is-open .hamburger__inner::after {
+    transform: rotate(-225deg);
+  }
+
+  // --- squeeze: 막대가 먼저 가운데로 모인 뒤, 그다음에 회전해 X자가 되는 2단계 모션 ---
+  &--squeeze .hamburger__inner,
+  &--squeeze .hamburger__inner::before,
+  &--squeeze .hamburger__inner::after {
+    transition:
+      top 0.15s ease 0.15s,
+      transform 0.15s ease,
+      background-color 0s 0.15s;
+  }
+
+  &--squeeze.is-open .hamburger__inner {
+    background-color: transparent;
+    transition-delay: 0s;
+  }
+
+  &--squeeze.is-open .hamburger__inner::before,
+  &--squeeze.is-open .hamburger__inner::after {
+    top: 0;
+    transition:
+      top 0.15s ease,
+      transform 0.15s ease 0.15s;
+  }
+
+  &--squeeze.is-open .hamburger__inner::before {
+    transform: rotate(45deg);
+  }
+
+  &--squeeze.is-open .hamburger__inner::after {
+    transform: rotate(-45deg);
+  }
+
+  // --- arrow: 단계 구분 없이 한 번에 스냅되듯 빠르게 X자로 전환되는 모션 ---
+  &--arrow .hamburger__inner,
+  &--arrow .hamburger__inner::before,
+  &--arrow .hamburger__inner::after {
+    transition:
+      top 0.15s ease-out,
+      transform 0.15s ease-out,
+      background-color 0.15s ease-out;
+  }
+
+  &--arrow.is-open .hamburger__inner {
+    background-color: transparent;
+  }
+
+  &--arrow.is-open .hamburger__inner::before,
+  &--arrow.is-open .hamburger__inner::after {
+    top: 0;
+  }
+
+  &--arrow.is-open .hamburger__inner::before {
+    transform: rotate(45deg);
+  }
+
+  &--arrow.is-open .hamburger__inner::after {
+    transform: rotate(-45deg);
+  }
+
+  // --- slider: 단계 구분 없이 이동과 회전이 하나의 곡선으로 동시에 진행되는 모션 ---
+  //     (느리게 출발해 점점 빨라지는 이징이라 막대가 미끄러지듯 자리를 잡습니다)
+  &--slider .hamburger__inner,
+  &--slider .hamburger__inner::before,
+  &--slider .hamburger__inner::after {
+    transition:
+      top 0.35s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+      transform 0.35s cubic-bezier(0.55, 0.055, 0.675, 0.19),
+      background-color 0.35s ease;
+  }
+
+  &--slider.is-open .hamburger__inner {
+    background-color: transparent;
+  }
+
+  &--slider.is-open .hamburger__inner::before,
+  &--slider.is-open .hamburger__inner::after {
+    top: 0;
+  }
+
+  &--slider.is-open .hamburger__inner::before {
+    transform: rotate(45deg);
+  }
+
+  &--slider.is-open .hamburger__inner::after {
+    transform: rotate(-45deg);
+  }
+}

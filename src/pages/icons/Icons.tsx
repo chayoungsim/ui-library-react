@@ -1,7 +1,9 @@
 import Box from "@/components/Box"
 import Icon from "@/components/Icon/Icon"
+import usePageTitle from "@/hooks/usePageTitle"
 
 const Icons = () => {
+      usePageTitle ('Icons - ui-library')
   return (
     <div>
         <h2>Icons</h2>   

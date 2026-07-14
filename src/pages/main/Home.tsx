@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Box, Button, Checkbox, Input, Radio, Select, Switch } from '@/index'
 import type { ButtonProps } from '@/index'
 import { colord } from 'colord'
+import usePageTitle from '@/hooks/usePageTitle'
 
 interface ColorItem {
   varName: string
@@ -17,6 +18,7 @@ const ColorSwatch = ({ item }: ColorSwatchProps) => {
   const { varName, label, description } = item
   const [hex, setHex] = useState('')
   const colorRef = useRef<HTMLDivElement>(null)
+  usePageTitle ('Home - ui-library')
 
   useEffect(() => {
     if (colorRef.current) {

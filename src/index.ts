@@ -42,3 +42,6 @@ export type { CardProps } from './components/Card'
 
 export { default as Switch } from './components/Switch'
 export type { SwitchProps } from './components/Switch'
+
+export { default as Hamburger } from './components/Hamburger'
+export type { HamburgerProps } from './components/Hamburger'

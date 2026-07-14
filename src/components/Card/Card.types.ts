@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
-export interface CardProps extends ComponentPropsWithoutRef<'div'> {
+export interface CardProps extends Omit<ComponentPropsWithoutRef<'div'>, 'title'> {
   /**
    * 카드 상단에 표시할 이미지 등의 미디어 영역입니다. 내부 여백 없이 꽉 차게 렌더링됩니다.
    */

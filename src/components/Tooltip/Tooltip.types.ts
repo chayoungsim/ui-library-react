@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 
-export interface TooltipProps extends ComponentPropsWithoutRef<'span'> {
+export interface TooltipProps extends Omit<ComponentPropsWithoutRef<'span'>, 'content'> {
   /**
    * 툴팁에 표시할 내용입니다.
    */
