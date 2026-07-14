@@ -1,0 +1,166 @@
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+/* ==========================================================================
+   Tabs Component
+   ========================================================================== */
+
+.tabs {
+  width: 100%;
+
+  /*
+   * ==========================================================================
+   * 1. 내부 요소 (Elements)
+   * ==========================================================================
+   */
+  &__list {
+    display: flex;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  &__tab {
+    position: relative;
+    padding: 1.2rem 1.6rem;
+    border: none;
+    background: none;
+    color: var(--color-gray-600);
+    font-weight: 600;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      color: var(--color-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &.is-active {
+      color: var(--color-primary);
+    }
+  }
+
+  &__panel {
+    padding: 1.6rem 0;
+    color: var(--color-text);
+  }
+
+  // responsive variant에서만 사용하는 모바일 전용 select (기본은 숨김)
+  &__mobile-select {
+    display: none;
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 크기 (Size)
+   * ==========================================================================
+   */
+  &--sm {
+    .tabs__tab {
+      padding: 0.8rem 1.2rem;
+      font-size: 1.4rem;
+    }
+  }
+
+  &--lg {
+    .tabs__tab {
+      padding: 1.6rem 2rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 3. 디자인 타입 (Variant) — 클래스 조합으로 다양한 디자인을 만들 수 있습니다.
+   * ==========================================================================
+   */
+
+  // --- Default: 선택된 탭 아래 밑줄 인디케이터 ---
+  &--default {
+    .tabs__tab.is-active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background-color: var(--color-primary);
+    }
+  }
+
+  // --- Pill: 알약 형태의 세그먼트 컨트롤 ---
+  &--pill {
+    .tabs__list {
+      display: inline-flex;
+      gap: 0.2rem;
+      border-bottom: none;
+      padding: 0.4rem;
+      border-radius: 999px;
+      background-color: var(--color-gray-100);
+    }
+
+    .tabs__tab {
+      border-radius: 999px;
+      padding: 0.8rem 1.6rem;
+
+      &.is-active {
+        background-color: var(--color-background);
+        color: var(--color-primary);
+        box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  // --- Boxed: 폴더 탭처럼 테두리로 연결된 형태 ---
+  &--boxed {
+    .tabs__list {
+      gap: 0;
+    }
+
+    .tabs__tab {
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+
+      &.is-active {
+        border-color: var(--color-border);
+        background-color: var(--color-background);
+        margin-bottom: -1px;
+      }
+    }
+  }
+
+  // --- Responsive: PC에서는 일반 탭, 모바일 너비에서는 select 하나로 전환 ---
+  &--responsive {
+    // 모바일 우선(기본값): select만 노출하고 탭 목록은 숨김
+    .tabs__mobile-select {
+      display: block;
+      margin-bottom: 1.2rem;
+    }
+
+    .tabs__list {
+      display: none;
+    }
+
+    // md 이상(태블릿/데스크탑)에서는 일반 탭 목록으로 전환
+    @include respond('md') {
+      .tabs__mobile-select {
+        display: none;
+      }
+
+      .tabs__list {
+        display: flex;
+      }
+    }
+  }
+}

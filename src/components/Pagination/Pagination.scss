@@ -1,0 +1,136 @@
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+/* ==========================================================================
+   Pagination Component
+   ========================================================================== */
+
+.pagination {
+  /*
+   * ==========================================================================
+   * 1. 내부 요소 (Elements)
+   * ==========================================================================
+   */
+
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__link {
+    @include flex-c;
+
+    min-width: 3.2rem;
+    height: 3.2rem;
+    padding: 0 0.8rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: none;
+    color: var(--color-text);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-gray-100);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &[aria-current='page'] {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-white);
+      font-weight: 600;
+    }
+  }
+
+  &__ellipsis {
+    @include flex-c;
+
+    min-width: 3.2rem;
+    height: 3.2rem;
+    color: var(--color-gray-500);
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 크기 (Size)
+   * ==========================================================================
+   */
+  &--sm {
+    .pagination__link,
+    .pagination__ellipsis {
+      min-width: 2.8rem;
+      height: 2.8rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  &--lg {
+    .pagination__link,
+    .pagination__ellipsis {
+      min-width: 4rem;
+      height: 4rem;
+      font-size: 1.6rem;
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 3. 디자인 타입 (Variant) — 클래스 조합으로 다양한 디자인을 만들 수 있습니다.
+   * ==========================================================================
+   */
+
+  // --- Outline: 테두리가 있는 링크, 현재 페이지는 테두리 강조 ---
+  &--outline {
+    .pagination__link {
+      border-color: var(--color-border);
+
+      &[aria-current='page'] {
+        background-color: transparent;
+        color: var(--color-primary);
+        border-color: var(--color-primary);
+      }
+    }
+  }
+
+  // --- Rounded: 원형 버튼 ---
+  &--rounded {
+    .pagination__link,
+    .pagination__ellipsis {
+      border-radius: 50%;
+    }
+  }
+
+  // --- Text: 배경 없이 밑줄로 현재 페이지 표시 ---
+  &--text {
+    .pagination__link {
+      border-radius: 0;
+
+      &[aria-current='page'] {
+        background-color: transparent;
+        border-color: transparent;
+        color: var(--color-primary);
+        box-shadow: inset 0 -0.2rem 0 var(--color-primary);
+      }
+    }
+  }
+}

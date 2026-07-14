@@ -1,0 +1,105 @@
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+/* ==========================================================================
+   Tooltip Component
+   ========================================================================== */
+
+.tooltip {
+  // --- 기본 구조 및 레이아웃 ---
+  position: relative;
+  display: inline-block;
+
+  /*
+   * ==========================================================================
+   * 1. 말풍선
+   * ==========================================================================
+   */
+  &__bubble {
+    position: absolute;
+    z-index: 1000;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+    font-size: 1.3rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: tooltip-fade-in 0.15s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      border: 0.5rem solid transparent;
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 위치 (Position)
+   * ==========================================================================
+   */
+  &__bubble--top {
+    bottom: calc(100% + 0.8rem);
+    left: 50%;
+    transform: translateX(-50%);
+
+    &::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: var(--color-gray-900);
+    }
+  }
+
+  &__bubble--bottom {
+    top: calc(100% + 0.8rem);
+    left: 50%;
+    transform: translateX(-50%);
+
+    &::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: var(--color-gray-900);
+    }
+  }
+
+  &__bubble--left {
+    right: calc(100% + 0.8rem);
+    top: 50%;
+    transform: translateY(-50%);
+
+    &::after {
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left-color: var(--color-gray-900);
+    }
+  }
+
+  &__bubble--right {
+    left: calc(100% + 0.8rem);
+    top: 50%;
+    transform: translateY(-50%);
+
+    &::after {
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-right-color: var(--color-gray-900);
+    }
+  }
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

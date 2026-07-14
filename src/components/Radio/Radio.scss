@@ -1,0 +1,144 @@
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+/* ==========================================================================
+   Radio Component
+   ========================================================================== */
+
+.radio {
+  // --- 기본 구조 및 레이아웃 ---
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+
+  /*
+   * ==========================================================================
+   * 1. 내부 요소 (Elements)
+   * ==========================================================================
+   */
+
+  // --- 실제 input (시각적으로 숨기되 접근성은 유지) ---
+  &__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  // --- 커스텀 원형 컨트롤 ---
+  &__control {
+    position: relative;
+    flex-shrink: 0;
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      background-color: var(--color-white);
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.15s ease;
+    }
+  }
+
+  &__label {
+    color: var(--color-text);
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 크기 (Size)
+   * ==========================================================================
+   */
+  &--sm {
+    .radio__control {
+      width: 1.6rem;
+      height: 1.6rem;
+
+      &::after {
+        width: 0.6rem;
+        height: 0.6rem;
+      }
+    }
+
+    .radio__label {
+      font-size: 1.4rem;
+    }
+  }
+
+  &--md {
+    .radio__control {
+      width: 2rem;
+      height: 2rem;
+
+      &::after {
+        width: 0.8rem;
+        height: 0.8rem;
+      }
+    }
+
+    .radio__label {
+      font-size: 1.6rem;
+    }
+  }
+
+  &--lg {
+    .radio__control {
+      width: 2.4rem;
+      height: 2.4rem;
+
+      &::after {
+        width: 1rem;
+        height: 1rem;
+      }
+    }
+
+    .radio__label {
+      font-size: 1.8rem;
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 3. 상태 (State)
+   * ==========================================================================
+   */
+
+  // --- 체크 상태 ---
+  .radio__input:checked + .radio__control {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+
+    &::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  // --- 포커스 접근성 ---
+  .radio__input:focus-visible + .radio__control {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  // --- 비활성 상태 ---
+  &.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}

@@ -1,0 +1,14 @@
+.box {
+    border: 1px solid var(--color-border);
+    box-shadow: 0 0 1px rgb(0 0 0 / 1.4%);
+    padding: 1.6rem;
+    background: var(--color-background);
+    border-radius: 0.6rem;
+    gap: 2rem;
+}
+
+.flex-center-row {
+    display: flex;   
+    flex-direction: column;
+    align-items: center;
+}

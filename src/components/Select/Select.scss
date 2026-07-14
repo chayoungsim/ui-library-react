@@ -1,0 +1,104 @@
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+/* ==========================================================================
+   Select Component
+   ========================================================================== */
+
+.select {
+  // --- 기본 구조 및 레이아웃 ---
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  /*
+   * ==========================================================================
+   * 1. 내부 요소 (Elements)
+   * ==========================================================================
+   */
+
+  &__control {
+    display: block;
+    width: 100%;
+    appearance: none;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    padding-right: 3.2rem; // 화살표 아이콘 공간 확보
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:focus-visible {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+    }
+
+    &:disabled {
+      background-color: var(--color-gray-100);
+      color: var(--color-gray-500);
+      cursor: not-allowed;
+    }
+  }
+
+  &__arrow {
+    position: absolute;
+    top: 50%;
+    right: 1.2rem;
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--color-gray-500);
+    pointer-events: none;
+    // icon--arr-right 자체의 rotate와 위치 조정용 translateY를 하나의 transform으로 합칩니다.
+    // (별도 선언 시 나중에 적용되는 규칙이 앞선 transform을 통째로 덮어씁니다.)
+    transform: translateY(-50%) rotate(90deg);
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 크기 (Size)
+   * ==========================================================================
+   */
+  &--sm {
+    .select__control {
+      height: 3.2rem;
+      padding-left: 1.2rem;
+      font-size: 1.4rem;
+    }
+  }
+
+  &--md {
+    .select__control {
+      height: 4rem;
+      padding-left: 1.6rem;
+      font-size: 1.6rem;
+    }
+  }
+
+  &--lg {
+    .select__control {
+      height: 4.8rem;
+      padding-left: 2.4rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 3. 상태 (State)
+   * ==========================================================================
+   */
+  &.is-error {
+    .select__control {
+      border-color: var(--color-error);
+
+      &:focus-visible {
+        border-color: var(--color-error);
+        box-shadow: 0 0 0 2px rgba($color-error, 0.2);
+      }
+    }
+  }
+}

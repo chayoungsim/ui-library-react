@@ -1,0 +1,161 @@
+@use '@/styles/abstracts/breakpoints' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+
+/* ==========================================================================
+   Accordion Component
+   ========================================================================== */
+
+.accordion {
+  width: 100%;
+
+  /*
+   * ==========================================================================
+   * 1. 내부 요소 (Elements)
+   * ==========================================================================
+   */
+  &__item {
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__heading {
+    margin: 0;
+  }
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    width: 100%;
+    padding: 1.6rem 0;
+    border: none;
+    background: none;
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 1.6rem;
+    text-align: left;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;    
+    background-color: var(--color-gray-500);
+    transition: transform 0.2s ease;
+    transform: rotate(90deg); // icon--arr-right를 기본값으로 아래를 향하게 회전
+  }
+
+  &__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.2s ease;
+  }
+
+  &__content {
+    overflow: hidden;
+    color: var(--color-gray-700);
+    min-height: 0;
+  }
+
+  &__content-inner {
+    padding-bottom: 1.6rem;
+  }
+
+  &__item.is-open {
+    .accordion__panel {
+      grid-template-rows: 1fr;
+    }
+
+    .accordion__icon {
+      transform: rotate(270deg); // 펼쳐지면 위를 향하도록 90deg 추가 회전
+    }
+  }
+
+  /*
+   * ==========================================================================
+   * 2. 디자인 타입 (Variant) — 클래스 조합으로 다양한 디자인을 만들 수 있습니다.
+   * ==========================================================================
+   */
+
+  // --- Bordered: 전체를 하나의 테두리로 감싸기 ---
+  &--bordered {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+
+    .accordion__item {
+      padding: 0 1.6rem;
+    }
+  }
+
+  // --- Separated: 항목마다 독립된 카드 형태 ---
+  &--separated {
+    .accordion__item {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0 1.6rem;
+      margin-bottom: 1.2rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // --- Filled: 항목마다 배경을 채운 필박스 형태, 펼치면 primary 톤으로 강조 ---
+  &--filled {
+    .accordion__item {
+      border: none;
+      border-radius: 8px;
+      background-color: var(--color-gray-100);
+      padding: 0 1.6rem;
+      margin-bottom: 0.8rem;
+      transition: background-color 0.2s ease;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &.is-open {
+        background-color: rgba($color-primary, 0.08);
+
+        .accordion__title {
+          color: var(--color-primary);
+        }
+      }
+    }
+  }
+
+  // --- Underline: 테두리 없이 펼친 항목 제목 아래 밑줄만 강조 ---
+  &--underline {
+    .accordion__item {
+      border-bottom: 1px solid var(--color-border);
+
+      &.is-open .accordion__title {
+        color: var(--color-primary);
+        box-shadow: inset 0 -0.2rem 0 var(--color-primary);
+      }
+    }
+
+    .accordion__title {
+      padding-bottom: 0.2rem;
+      transition:
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+  }
+}
