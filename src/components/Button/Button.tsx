@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import type { ButtonProps } from './Button.types'
+import Spinner from './Spinner'
 import './Button.scss'
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -9,8 +10,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     size = 'md',
     loading = false,
     disabled = false,
-    leftIcon,
-    rightIcon,
+    startIcon,
+    endIcon,
+    iconOnly = false,
     className,
     type = 'button',
     ...props
@@ -24,6 +26,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     'btn',
     `btn--${variant}`,
     `btn--${size}`,
+    iconOnly ? 'btn--icon' : '',
     loading ? 'is-loading' : '',
     className || '',
   ]
@@ -40,12 +43,16 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       {...props}
     >
       {loading ? (
-        <span className="btn__loader" aria-label="로딩 중"></span>
+        <span className="btn__loader" aria-label="로딩 중">
+          <Spinner />
+        </span>
+      ) : iconOnly ? (
+        <span className="btn__icon">{children}</span>
       ) : (
         <>
-          {leftIcon && <span className="btn__icon btn__icon--left">{leftIcon}</span>}
+          {startIcon && <span className="btn__icon btn__icon--start">{startIcon}</span>}
           <span className="btn__text">{children}</span>
-          {rightIcon && <span className="btn__icon btn__icon--right">{rightIcon}</span>}
+          {endIcon && <span className="btn__icon btn__icon--end">{endIcon}</span>}
         </>
       )}
     </button>
