@@ -1,5 +1,19 @@
+
+import Box from '@/components/Box'
+
 const Docs = () => {
-  return <div>Docs</div>
+
+  return (
+    <div>
+      <h2>Docs</h2>
+      <div className="sect">
+        <h3>OpenAI 연결 테스트</h3>
+        <Box>
+          
+        </Box>
+      </div>
+    </div>
+  )
 }
 
 export default Docs
