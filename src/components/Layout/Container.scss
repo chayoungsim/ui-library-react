@@ -1,0 +1,68 @@
+@use '@/styles/abstracts/breakpoints' as *;
+
+.container {
+  width: 100%;
+}
+
+.container--full {
+  padding: var(--spacing-5);
+}
+
+.container--with-sidebar {
+  display: flex;
+  flex-direction: column;
+
+  @include respond('lg') {
+    flex-direction: row;
+    
+  }
+}
+
+.container__sidebar {
+  flex: 0 0 auto;
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+
+  @include respond('lg') {
+    width: 25rem;
+    border-bottom: none;
+    border-right: 1px solid var(--color-border);
+  }
+
+  nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    display: block;
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--color-gray-100);
+    }
+
+    &.active {
+      background-color: var(--color-primary);
+      color: var(--color-white);
+    }
+  }
+}
+
+.container__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--spacing-5);
+}
+
+.container--full .breadcrumb,
+.container__content .breadcrumb {
+  margin-bottom: var(--spacing-4);
+}

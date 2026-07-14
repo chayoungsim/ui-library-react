@@ -3,6 +3,14 @@
  * This file sets up base styles for html, body, and other global elements.
  */
 
+@use 'sass:color'; 
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+
+
+:root {
+  --header-height: 6.4rem;
+}
 html {
   // Set base font-size to 62.5% to make 1rem = 10px for easier calculations.
   // 10px / 16px (browser default) = 62.5%
@@ -16,6 +24,8 @@ body {
   font-size: 1.6rem; // Sets default font size to 16px
   color: var(--color-text);
   background-color: var(--color-background);
+  @include custom-scrollbar;
+  overflow-x: hidden;
 }
 
 a {
@@ -25,4 +35,22 @@ a {
   &:hover {
     text-decoration: underline;
   }
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  @include vh(100, min-height);
+  max-width: 2560px;
+  margin:0 auto;
+}
+
+#container {
+  width: 100%;
+  flex: 1 0 auto;
+  padding-top: var(--header-height);
+}
+
+.flex-center {
+    @include flex-c;
 }

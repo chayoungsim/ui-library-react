@@ -1,0 +1,84 @@
+@use '@/styles/abstracts' as *;
+
+.header {
+    
+}
+.static {
+    @include flex-sb;
+    h1 {
+        font-size: 3rem;
+    }
+}
+
+.gnb {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 0.4rem 1.6rem rgba(0, 0, 0, 0.18);
+}
+
+.item {
+    position: relative;
+
+    > a {
+        display: block;
+        padding: 0.8rem 1.6rem;
+        border-radius: 999px;
+        color: var(--color-white);
+        font-weight: 600;
+        font-size: 1.4rem;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+    }
+
+    &.is-active > a {
+        background: rgba(255, 255, 255, 0.14);
+    }
+}
+
+.submenu {
+    position: absolute;
+    top: calc(100% + 1.2rem);
+    left: 0;
+    min-width: 20rem;
+    padding: 1.2rem;
+    border-radius: 1.6rem;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.24);
+    @include flex-col($gap: 0.4rem);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.4rem);
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+
+    a {
+        padding: 0.6rem 0.8rem;
+        border-radius: 0.8rem;
+        color: var(--color-white);
+        font-size: 1.4rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    .item.is-active > & {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}

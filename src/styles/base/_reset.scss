@@ -3,6 +3,8 @@
   https://piccalil.li/blog/a-modern-css-reset/
 */
 
+@use '@/styles/abstracts/mixins' as *;
+
 /* Box sizing rules */
 *,
 *::before,
@@ -25,8 +27,8 @@ dd {
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
-ul[role='list'],
-ol[role='list'] {
+ul,
+ol {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -39,7 +41,7 @@ html:focus-within {
 
 /* Set core body defaults */
 body {
-  min-height: 100vh;
+  @include vh(100, min-height);
   text-rendering: optimizespeed;
   line-height: 1.5;
 }

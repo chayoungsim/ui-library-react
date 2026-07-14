@@ -1,0 +1,102 @@
+@use '@/styles/abstracts' as *;
+
+.header {
+    position: relative;    
+    nav {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        @include flex-c;        
+    }
+    
+}
+
+.static {
+    position: relative;
+    @include flex-sb;
+    padding: 0 2rem;
+    // max-width: 1280px;
+    // margin: 0 auto;   
+    h1 {
+        font-size: 3rem;
+        margin: 0;
+    } 
+}
+
+.gnb {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+    > li {
+        > a {
+            @include flex-c;
+            height: 4rem;
+            font-weight: 600;
+            color:var(--color-black);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s;
+            text-decoration: none;
+            > span, &::after {
+                @include flex-c;
+                width: 100%;
+                height: 100%;
+                transition: 0.3s ease-in-out;
+                font-weight: 600;
+            }
+
+            &::after {
+                content: attr(data-trans);
+                position: absolute;
+                top: 100%;
+                left: 0;
+            }
+
+            &:hover {
+                span {
+                    transform: translateY(-100%);
+                }
+                &::after{
+                    top: 0;
+                }
+            }
+        }
+    }
+}
+
+.mobileToggle {
+    background: transparent;
+    border: 0;
+    padding: 0.8rem;
+    line-height: 1;
+}
+
+.mobileNav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-white);
+    padding: 2rem;
+    box-shadow: 0 0.8rem 1.6rem rgba(0, 0, 0, 0.12);
+    display: none;
+
+    &.is-open {
+        display: block;
+    }
+
+    .gnb {
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: none;
+        gap: 1.6rem;
+
+        > li > a {
+            height: auto;
+            justify-content: flex-start;
+        }
+    }
+}
