@@ -9,7 +9,7 @@ const Docs = () => {
       <div className="sect">
         <h3>OpenAI 연결 테스트</h3>
         <Box>
-          
+           <a href="guide.html" target="_blank">guide</a>
         </Box>
       </div>
     </div>
