@@ -1,11 +1,15 @@
 import Tabs from '@/components/Tabs'
 import Box from '@/components/Box/Box'
+import OverviewContent from './tabs/OverviewContent'
+import SpecContent from './tabs/SpecContent'
+import ReviewContent from './tabs/ReviewContent'
+import QnaContent from './tabs/QnaContent'
 
 const items = [
-  { id: 'overview', label: '개요', content: '제품 개요 내용입니다.' },
-  { id: 'spec', label: '상세 스펙', content: '상세 스펙 내용입니다.' },
-  { id: 'review', label: '리뷰', content: '리뷰 내용입니다.' },
-  { id: 'qna', label: 'Q&A', content: '문의 내용입니다.'},
+  { id: 'overview', label: '개요', content: <OverviewContent /> },
+  { id: 'spec', label: '상세 스펙', content: <SpecContent /> },
+  { id: 'review', label: '리뷰', content: <ReviewContent /> },
+  { id: 'qna', label: 'Q&A', content: <QnaContent /> },
 ]
 
 const TabsPage = () => {

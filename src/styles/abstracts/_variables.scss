@@ -26,13 +26,12 @@ $color-background: $color-white;
 $color-text: #333;
 $color-link: $color-primary;
 $color-border: $color-gray-200;
+$color-border-light: $color-gray-100;
 $color-error: #dc3545;
 
 // 2. Fonts
 // ==========================================================================
-$font-family-sans:
-  -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, oxygen, ubuntu, cantarell, 'Open Sans',
-  'Helvetica Neue', sans-serif;
+$font-family-sans: 'Pretendard', -apple-system,sans-serif;
 $font-weight-normal: 400;
 $font-weight-bold: 700;
 

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="프로젝트 마크업 가이드 — 컴포넌트별 마크업과 사용 규칙">
+  <title>마크업 가이드 | Project</title>
+  <style>
+    /* ==========================================================
+       Guide tokens
+       ========================================================== */
+    :root {
+      --page: #f4f6f8;
+      --paper: #ffffff;
+      --ink: #1c2530;
+      --muted: #66707c;
+      --line: #e2e6eb;
+      --accent: #2b50d8;
+      --accent-soft: #eaeefc;
+      --danger: #d64545;
+      --code-bg: #101724;
+      --code-ink: #dce3ee;
+      --grid: rgba(43, 80, 216, 0.08);
+      --radius: 10px;
+      --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--page);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .gd-skip {
+      position: absolute;
+      left: 16px; top: -48px;
+      z-index: 100;
+      padding: 8px 14px;
+      background: var(--ink);
+      color: #fff;
+      border-radius: 0 0 8px 8px;
+      text-decoration: none;
+      font-size: 13px;
+      transition: top .15s ease;
+    }
+    .gd-skip:focus { top: 0; }
+
+    /* ==========================================================
+       Layout
+       ========================================================== */
+    .gd-layout {
+      display: grid;
+      grid-template-columns: 232px minmax(0, 1fr);
+      gap: 40px;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px 96px;
+    }
+
+    .gd-side {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      padding: 36px 0;
+      overflow-y: auto;
+    }
+
+    .gd-logo {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: .04em;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 6px;
+    }
+    .gd-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      margin-bottom: 28px;
+    }
+    .gd-title b { color: var(--accent); }
+
+    .gd-nav ul { list-style: none; }
+    .gd-nav a {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 7px;
+      font-size: 13.5px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .gd-nav a:hover { color: var(--ink); background: rgba(0,0,0,.04); }
+    .gd-nav a.is-current { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+    .gd-nav a code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: currentColor;
+      opacity: .55;
+    }
+
+    .gd-main { padding-top: 36px; min-width: 0; }
+
+    .gd-intro { margin-bottom: 48px; }
+    .gd-intro h1 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 10px; }
+    .gd-intro p { color: var(--muted); max-width: 60ch; }
+    .gd-intro code {
+      font-family: var(--font-mono);
+      font-size: .9em;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 1px 6px;
+      border-radius: 5px;
+    }
+
+    /* ---- section ---- */
+    .gd-section { margin-bottom: 64px; scroll-margin-top: 24px; }
+    .gd-section > h2 {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 8px;
+    }
+    .gd-section > h2 code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+    }
+    .gd-section > .gd-desc { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+    .gd-desc code {
+      font-family: var(--font-mono);
+      font-size: .92em;
+      background: #eceff3;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    /* ---- preview panel : signature (모눈 스펙 시트) ---- */
+    .gd-preview {
+      position: relative;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        var(--paper);
+      background-size: 20px 20px, 20px 20px, auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 44px 28px 28px;
+    }
+    .gd-preview__tag {
+      position: absolute;
+      top: 0; left: 0;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: .08em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 4px 10px;
+      border-radius: var(--radius) 0 8px 0;
+    }
+    .gd-preview + .gd-code { border-top: 0; border-radius: 0 0 var(--radius) var(--radius); }
+
+    /* ---- code block ---- */
+    .gd-code {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--code-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .gd-code pre {
+      overflow-x: auto;
+      padding: 18px 20px;
+    }
+    .gd-code code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--code-ink);
+    }
+    .gd-code__copy {
+      position: absolute;
+      top: 8px; right: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--code-ink);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+    .gd-code__copy:hover { background: rgba(255,255,255,.16); }
+
+    .gd-note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      padding-left: 14px;
+      border-left: 3px solid var(--accent-soft);
+    }
+
+    /* ==========================================================
+       Demo components (실제 프로젝트 컴포넌트 예시)
+       ========================================================== */
+
+    /* ---- color tokens ---- */
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; }
+    .swatch { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--paper); }
+    .swatch__chip { height: 56px; }
+    .swatch__meta { padding: 8px 10px; font-family: var(--font-mono); font-size: 11px; line-height: 1.5; }
+    .swatch__meta b { display: block; font-weight: 600; }
+    .swatch__meta span { color: var(--muted); }
+
+    /* ---- typography ---- */
+    .type-sample > * + * { margin-top: 10px; }
+    .type-sample h1 { font-size: 32px; font-weight: 800; letter-spacing: -.02em; }
+    .type-sample h2 { font-size: 24px; font-weight: 700; letter-spacing: -.01em; }
+    .type-sample h3 { font-size: 18px; font-weight: 700; }
+    .type-sample p { font-size: 15px; color: var(--ink); max-width: 62ch; }
+    .type-sample small { font-size: 13px; color: var(--muted); }
+
+    /* ---- button ---- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 44px;
+      padding: 0 20px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      transition: filter .12s ease;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn--outline { background: var(--paper); color: var(--ink); border-color: var(--line); }
+    .btn--outline:hover { filter: none; background: #f2f4f7; }
+    .btn--secondary { background: var(--muted); }
+    .btn--sm { height: 34px; padding: 0 14px; font-size: 13px; border-radius: 7px; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    /* ---- form ---- */
+    .form-field { max-width: 360px; }
+    .form-field + .form-field { margin-top: 18px; }
+    .form-field__label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 6px; }
+    .form-field__required { color: var(--danger); font-style: normal; }
+    .form-field__input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      font-size: 14.5px;
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .form-field textarea { resize: vertical; }
+    .form-field__input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+    .form-field.has-error .form-field__input { border-color: var(--danger); }
+    .form-field__message { margin-top: 6px; font-size: 12.5px; color: var(--danger); }
+    .check { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; margin-right: 16px; cursor: pointer; }
+    .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+    /* ---- table ---- */
+    .tbl { width: 100%; border-collapse: collapse; background: var(--paper); font-size: 14px; }
+    .tbl caption { text-align: left; font-size: 13px; color: var(--muted); padding-bottom: 8px; }
+    .tbl th, .tbl td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; }
+    .tbl thead th { font-size: 12.5px; letter-spacing: .02em; color: var(--muted); border-bottom: 2px solid var(--ink); }
+    .tbl tbody tr:hover { background: #f7f9fc; }
+
+    /* ---- card ---- */
+    .card-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; list-style: none; }
+    .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .card__thumb { aspect-ratio: 16 / 9; background: linear-gradient(135deg, var(--accent-soft), #dfe6fb); }
+    .card__body { padding: 14px 16px 16px; }
+    .card__title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .card__title a { text-decoration: none; }
+    .card__title a:hover { color: var(--accent); }
+    .card__text { font-size: 13px; color: var(--muted); }
+
+    /* ---- tabs ---- */
+    .tabs__list { display: flex; gap: 4px; border-bottom: 1px solid var(--line); }
+    .tabs__tab {
+      padding: 10px 16px;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tabs__tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+    .tabs__panel { padding: 18px 4px; font-size: 14px; }
+    .tabs__panel[hidden] { display: none; }
+
+    /* ---- accordion ---- */
+    .acc { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); overflow: hidden; }
+    .acc + .acc { margin-top: 10px; }
+    .acc summary {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .acc summary::-webkit-details-marker { display: none; }
+    .acc summary::after { content: "+"; font-family: var(--font-mono); color: var(--muted); }
+    .acc[open] summary::after { content: "\2013"; }
+    .acc__body { padding: 0 18px 16px; font-size: 14px; color: var(--muted); }
+
+    /* ---- modal ---- */
+    .modal { border: 0; border-radius: 14px; padding: 0; max-width: 400px; width: calc(100% - 48px); }
+    .modal::backdrop { background: rgba(16, 23, 36, .55); }
+    .modal__inner { padding: 26px 24px 22px; }
+    .modal__title { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+    .modal__text { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .modal__actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+    /* ==========================================================
+       Responsive
+       ========================================================== */
+    @media (max-width: 860px) {
+      .gd-layout { grid-template-columns: 1fr; gap: 0; }
+      .gd-side { position: static; height: auto; padding: 28px 0 0; }
+      .gd-nav ul { display: flex; flex-wrap: wrap; gap: 4px; }
+      .gd-nav a { padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); }
+      .gd-nav a code { display: none; }
+      .gd-main { padding-top: 28px; }
+      .gd-preview { padding: 44px 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="gd-skip" href="#content">본문 바로가기</a>
+
+  <div class="gd-layout">
+    <!-- section : side -->
+    <aside class="gd-side">
+      <a class="gd-logo" href="./guide.html">PUB / GUIDE</a>
+      <p class="gd-title">마크업 <b>가이드</b></p>
+      <nav class="gd-nav" aria-label="가이드 목차">
+        <ul>
+          <li><a href="#colors"><code>01</code>색상 토큰</a></li>
+          <li><a href="#typography"><code>02</code>타이포그래피</a></li>
+          <li><a href="#buttons"><code>03</code>버튼</a></li>
+          <li><a href="#forms"><code>04</code>폼</a></li>
+          <li><a href="#table"><code>05</code>테이블</a></li>
+          <li><a href="#card"><code>06</code>카드</a></li>
+          <li><a href="#tabs"><code>07</code>탭</a></li>
+          <li><a href="#accordion"><code>08</code>아코디언</a></li>
+          <li><a href="#modal"><code>09</code>모달</a></li>
+          <li><a href="#a11y"><code>10</code>접근성 패턴</a></li>
+        </ul>
+      </nav>
+    </aside>
+    <!-- // section : side -->
+
+    <main class="gd-main" id="content">
+      <div class="gd-intro">
+        <h1>컴포넌트 마크업 레퍼런스</h1>
+        <p>이 페이지의 마크업을 복사해 그대로 사용합니다. 네이밍·접근성 규칙 등 전체 컨벤션은 <code>docs/MARKUP-GUIDE.md</code>를 참고하세요.</p>
+      </div>
+
+      <!-- section : colors -->
+      <section class="gd-section" id="colors">
+        <h2>색상 토큰 <code>tokens / color</code></h2>
+        <p class="gd-desc">색상은 항상 SCSS 변수로 참조합니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">TOKEN / COLOR</span>
+          <div class="swatches">
+            <div class="swatch"><div class="swatch__chip" style="background:#2b50d8"></div><div class="swatch__meta"><b>--color-primary</b><span>#2B50D8</span></div></div>
+            <div class="swatch"><div class="swatch__chip" style="background:#1c2530"></div><div class="swatch__meta"><b>--color-link</b><span>#1C2530</span></div></div>
+            <div class="swatch"><div class="swatch__chip" style="background:#66707c"></div><div class="swatch__meta"><b>--color-text</b><span>#66707C</span></div></div>
+            <div class="swatch"><div class="swatch__chip" style="background:#e2e6eb"></div><div class="swatch__meta"><b>--color-border</b><span>#E2E6EB</span></div></div>
+            <div class="swatch"><div class="swatch__chip" style="background:#d64545"></div><div class="swatch__meta"><b>--color-error</b><span>#D64545</span></div></div>
+          </div>
+        </div>
+        <div class="gd-code">
+          <pre><code>color: var(--color-link);
+background: var(--color-background);
+border-color: var(--color-border);</code></pre>
+        </div>
+      </section>
+      <!-- // section : colors -->
+
+      <!-- section : typography -->
+      <section class="gd-section" id="typography">
+        <h2>타이포그래피 <code>base / type</code></h2>
+        <p class="gd-desc">h1은 페이지당 1개, heading 레벨은 건너뛰지 않습니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">BASE / TYPE</span>
+          <div class="type-sample">
+            <h2>H2 페이지 타이틀 32px</h2>
+            <h3>H3 섹션 타이틀 24px</h3>
+            <h4>H4 소제목 18px</h4>
+            <p>본문 15px — 프로젝트의 기본 본문 크기입니다. 행간은 1.6을 유지하고, 한 줄이 60자를 크게 넘지 않게 컨테이너 폭을 제한합니다.</p>
+            <small>캡션 13px — 보조 설명, 날짜 등에 사용합니다.</small>
+          </div>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;h2&gt;페이지 타이틀&lt;/h2&gt;
+&lt;h3&gt;섹션 타이틀&lt;/h3&gt;
+&lt;p&gt;본문 텍스트&lt;/p&gt;
+&lt;small&gt;캡션 텍스트&lt;/small&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : typography -->
+
+      <!-- section : buttons -->
+      <section class="gd-section" id="buttons">
+        <h2>버튼 <code>components / button</code></h2>
+        <p class="gd-desc">클릭 동작은 반드시 <code>button</code>, 페이지 이동은 <code>a</code>를 사용합니다. 변형은 <code>--modifier</code>로 확장합니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">BTN / VARIANTS</span>
+          <div class="btn-row">
+            <button type="button" class="btn btn--primary">기본 버튼</button>
+            <button type="button" class="btn btn--outline">삭제</button>
+            <button type="button" class="btn btn--secondary">보조 버튼</button>
+
+            <button type="button" class="btn btn--sm">작은 버튼</button>
+            <button type="button" class="btn" disabled>비활성</button>
+          </div>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;button type="button" class="btn btn--primary"&gt;기본 버튼&lt;/button&gt;
+&lt;button type="button" class="btn btn--secondary"&gt;보조 버튼&lt;/button&gt;
+&lt;button type="button" class="btn btn--outline"&gt;삭제&lt;/button&gt;
+&lt;button type="button" class="btn btn--sm"&gt;작은 버튼&lt;/button&gt;
+&lt;button type="button" class="btn" disabled&gt;비활성&lt;/button&gt;</code></pre>
+        </div>
+        <p class="gd-note"><code>type="button"</code>을 항상 명시합니다. 폼 안에서 기본값이 submit이라 의도치 않은 전송이 발생할 수 있습니다.</p>
+      </section>
+      <!-- // section : buttons -->
+
+      <!-- section : forms -->
+      <section class="gd-section" id="forms">
+        <h2>폼 <code>components / form</code></h2>
+        <p class="gd-desc">모든 입력 요소는 <code>label</code>과 <code>for/id</code>로 연결하고, 오류 메시지는 <code>aria-describedby</code>로 연결합니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">FORM / FIELD</span>
+          <div class="form-field">
+            <label class="form-field__label" for="demo-name">이름 <em class="form-field__required" aria-hidden="true">*</em></label>
+            <input class="form-field__input" id="demo-name" type="text" placeholder="홍길동" required>
+          </div>
+          <div class="form-field has-error">
+            <label class="form-field__label" for="demo-email">이메일 <em class="form-field__required" aria-hidden="true">*</em></label>
+            <input class="form-field__input" id="demo-email" type="email" value="hello@" required aria-describedby="demo-email-error" aria-invalid="true">
+            <p class="form-field__message" id="demo-email-error">이메일 형식이 올바르지 않습니다.</p>
+          </div>
+          <div class="form-field">
+            <span class="form-field__label" id="demo-agree-label">수신 동의</span>
+            <label class="check"><input type="checkbox" checked> 이메일</label>
+            <label class="check"><input type="checkbox"> SMS</label>
+          </div>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;div class="form-field has-error"&gt;
+  &lt;label class="form-field__label" for="user-email"&gt;
+    이메일 &lt;em class="form-field__required" aria-hidden="true"&gt;*&lt;/em&gt;
+  &lt;/label&gt;
+  &lt;input class="form-field__input" id="user-email" type="email"
+         required aria-describedby="user-email-error" aria-invalid="true"&gt;
+  &lt;p class="form-field__message" id="user-email-error"&gt;이메일 형식이 올바르지 않습니다.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : forms -->
+
+      <!-- section : table -->
+      <section class="gd-section" id="table">
+        <h2>테이블 <code>components / table</code></h2>
+        <p class="gd-desc">데이터 표에만 사용합니다. <code>caption</code>과 <code>scope</code>를 반드시 포함합니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">TABLE / DATA</span>
+          <table class="tbl">
+            <caption>2026년 상반기 프로젝트 현황</caption>
+            <thead>
+              <tr><th scope="col">프로젝트</th><th scope="col">담당</th><th scope="col">상태</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>브랜드 사이트 리뉴얼</td><td>퍼블파트</td><td>진행 중</td></tr>
+              <tr><td>이벤트 프로모션</td><td>퍼블파트</td><td>완료</td></tr>
+              <tr><td>어드민 개편</td><td>FE파트</td><td>대기</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;table class="tbl"&gt;
+  &lt;caption&gt;2026년 상반기 프로젝트 현황&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th scope="col"&gt;프로젝트&lt;/th&gt;&lt;th scope="col"&gt;담당&lt;/th&gt;&lt;th scope="col"&gt;상태&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;브랜드 사이트 리뉴얼&lt;/td&gt;&lt;td&gt;퍼블파트&lt;/td&gt;&lt;td&gt;진행 중&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : table -->
+
+      <!-- section : card -->
+      <section class="gd-section" id="card">
+        <h2>카드 <code>components / card</code></h2>
+        <p class="gd-desc">카드 목록은 <code>ul &gt; li</code> 구조를 유지합니다. 카드 전체 클릭이 필요하면 제목의 <code>a</code>를 확장하는 방식을 사용합니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">CARD / LIST</span>
+          <ul class="card-list">
+            <li class="card">
+              <div class="card__thumb" role="img" aria-label="프로젝트 썸네일"></div>
+              <div class="card__body">
+                <h3 class="card__title"><a href="#card">카드 타이틀</a></h3>
+                <p class="card__text">두 줄 내외의 짧은 설명이 들어갑니다.</p>
+              </div>
+            </li>
+            <li class="card">
+              <div class="card__thumb" role="img" aria-label="프로젝트 썸네일"></div>
+              <div class="card__body">
+                <h3 class="card__title"><a href="#card">카드 타이틀</a></h3>
+                <p class="card__text">두 줄 내외의 짧은 설명이 들어갑니다.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;ul class="card-list"&gt;
+  &lt;li class="card"&gt;
+    &lt;img class="card__thumb" src="./img/thumb.jpg" alt="" width="320" height="180" loading="lazy"&gt;
+    &lt;div class="card__body"&gt;
+      &lt;h3 class="card__title"&gt;&lt;a href="/detail"&gt;카드 타이틀&lt;/a&gt;&lt;/h3&gt;
+      &lt;p class="card__text"&gt;짧은 설명&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : card -->
+
+      <!-- section : tabs -->
+      <section class="gd-section" id="tabs">
+        <h2>탭 <code>components / tabs</code></h2>
+        <p class="gd-desc">WAI-ARIA 탭 패턴을 따릅니다. 좌우 방향키로 탭 간 이동이 가능해야 합니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">TABS / ARIA</span>
+          <div class="tabs js-tabs">
+            <div class="tabs__list" role="tablist" aria-label="예시 탭">
+              <button class="tabs__tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true" type="button">공지사항</button>
+              <button class="tabs__tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1" type="button">이벤트</button>
+              <button class="tabs__tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1" type="button">FAQ</button>
+            </div>
+            <div class="tabs__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">공지사항 패널 콘텐츠입니다.</div>
+            <div class="tabs__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>이벤트 패널 콘텐츠입니다.</div>
+            <div class="tabs__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>FAQ 패널 콘텐츠입니다.</div>
+          </div>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;div class="tabs js-tabs"&gt;
+  &lt;div class="tabs__list" role="tablist" aria-label="예시 탭"&gt;
+    &lt;button class="tabs__tab" role="tab" id="tab-1" aria-controls="panel-1"
+            aria-selected="true" type="button"&gt;공지사항&lt;/button&gt;
+    &lt;button class="tabs__tab" role="tab" id="tab-2" aria-controls="panel-2"
+            aria-selected="false" tabindex="-1" type="button"&gt;이벤트&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="tabs__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0"&gt;...&lt;/div&gt;
+  &lt;div class="tabs__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : tabs -->
+
+      <!-- section : accordion -->
+      <section class="gd-section" id="accordion">
+        <h2>아코디언 <code>components / accordion</code></h2>
+        <p class="gd-desc">네이티브 <code>details/summary</code>를 사용합니다. JS 없이 동작하고 키보드 접근성이 기본 제공됩니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">ACC / NATIVE</span>
+          <details class="acc" open>
+            <summary>배송은 얼마나 걸리나요?</summary>
+            <div class="acc__body">평일 오후 2시 이전 주문 시 당일 출고되며, 평균 1~2일 소요됩니다.</div>
+          </details>
+          <details class="acc">
+            <summary>교환/환불 규정이 궁금해요</summary>
+            <div class="acc__body">수령 후 7일 이내 신청 가능합니다.</div>
+          </details>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;details class="acc"&gt;
+  &lt;summary&gt;배송은 얼마나 걸리나요?&lt;/summary&gt;
+  &lt;div class="acc__body"&gt;평일 오후 2시 이전 주문 시 당일 출고됩니다.&lt;/div&gt;
+&lt;/details&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : accordion -->
+
+      <!-- section : modal -->
+      <section class="gd-section" id="modal">
+        <h2>모달 <code>components / modal</code></h2>
+        <p class="gd-desc">네이티브 <code>dialog</code> + <code>showModal()</code>을 사용합니다. 포커스 트랩과 ESC 닫기가 기본 제공됩니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">MODAL / DIALOG</span>
+          <button type="button" class="btn btn--secondary js-modal-open" data-modal="demo-modal">모달 열기</button>
+          <dialog class="modal" id="demo-modal" aria-labelledby="demo-modal-title">
+            <div class="modal__inner">
+              <h3 class="modal__title" id="demo-modal-title">변경사항을 저장할까요?</h3>
+              <p class="modal__text">저장하지 않으면 작성 중인 내용이 사라집니다.</p>
+              <div class="modal__actions">
+                <button type="button" class="btn btn--secondary btn--sm js-modal-close">취소</button>
+                <button type="button" class="btn btn--sm js-modal-close">저장</button>
+              </div>
+            </div>
+          </dialog>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;button type="button" class="btn js-modal-open" data-modal="demo-modal"&gt;모달 열기&lt;/button&gt;
+
+&lt;dialog class="modal" id="demo-modal" aria-labelledby="demo-modal-title"&gt;
+  &lt;div class="modal__inner"&gt;
+    &lt;h3 class="modal__title" id="demo-modal-title"&gt;변경사항을 저장할까요?&lt;/h3&gt;
+    &lt;p class="modal__text"&gt;저장하지 않으면 작성 중인 내용이 사라집니다.&lt;/p&gt;
+    &lt;div class="modal__actions"&gt;
+      &lt;button type="button" class="btn btn--secondary js-modal-close"&gt;취소&lt;/button&gt;
+      &lt;button type="button" class="btn js-modal-close"&gt;저장&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  document.querySelector('.js-modal-open').addEventListener('click', (e) =&gt; {
+    document.getElementById(e.currentTarget.dataset.modal).showModal();
+  });
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+      <!-- // section : modal -->
+
+      <!-- section : a11y -->
+      <section class="gd-section" id="a11y">
+        <h2>접근성 패턴 <code>base / a11y</code></h2>
+        <p class="gd-desc">숨김 텍스트, 스킵 링크 등 프로젝트 공통 접근성 유틸입니다. 이 페이지 최상단에서 Tab 키를 누르면 스킵 링크가 나타납니다.</p>
+        <div class="gd-preview">
+          <span class="gd-preview__tag">A11Y / UTILS</span>
+          <div class="btn-row">
+            <button type="button" class="btn btn--secondary btn--sm">
+              <span aria-hidden="true">🔍</span>
+              <span class="sr-only">검색</span>
+            </button>
+            <span style="font-size:13px;color:var(--muted)">← 아이콘 버튼: 화면에는 아이콘만, 스크린 리더에는 “검색”으로 읽힙니다.</span>
+          </div>
+        </div>
+        <div class="gd-code">
+          <pre><code>&lt;!-- 스킵 링크 : body 최상단 --&gt;
+&lt;p id="accessibility"&gt;&lt;a href="#content"&gt;본문 바로가기&lt;/a&gt;&lt;/p&gt;
+
+&lt;!-- 아이콘 전용 버튼 --&gt;
+&lt;button type="button" class="btn"&gt;
+  &lt;span aria-hidden="true"&gt;🔍&lt;/span&gt;
+  &lt;span class="sr-only"&gt;검색&lt;/span&gt;
+&lt;/button&gt;
+
+&lt;!-- 숨김 텍스트 유틸 --&gt;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}</code></pre>
+        </div>
+      </section>
+      <!-- // section : a11y -->
+    </main>
+  </div>
+
+  <script>
+    // ---- code copy ----
+    document.querySelectorAll('.gd-code').forEach((block) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gd-code__copy';
+      btn.textContent = 'COPY';
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(block.querySelector('code').innerText);
+          btn.textContent = 'COPIED!';
+          setTimeout(() => (btn.textContent = 'COPY'), 1500);
+        } catch (err) {
+          btn.textContent = 'FAILED';
+        }
+      });
+      block.appendChild(btn);
+    });
+
+    // ---- tabs (ARIA pattern) ----
+    document.querySelectorAll('.js-tabs').forEach((tabs) => {
+      const tabButtons = [...tabs.querySelectorAll('[role="tab"]')];
+      const panels = [...tabs.querySelectorAll('[role="tabpanel"]')];
+
+      const activate = (tab) => {
+        tabButtons.forEach((t) => {
+          const selected = t === tab;
+          t.setAttribute('aria-selected', String(selected));
+          t.tabIndex = selected ? 0 : -1;
+        });
+        panels.forEach((p) => {
+          p.hidden = p.id !== tab.getAttribute('aria-controls');
+        });
+        tab.focus();
+      };
+
+      tabButtons.forEach((tab, i) => {
+        tab.addEventListener('click', () => activate(tab));
+        tab.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight') activate(tabButtons[(i + 1) % tabButtons.length]);
+          if (e.key === 'ArrowLeft') activate(tabButtons[(i - 1 + tabButtons.length) % tabButtons.length]);
+        });
+      });
+    });
+
+    // ---- modal (native dialog) ----
+    document.querySelectorAll('.js-modal-open').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.getElementById(btn.dataset.modal)?.showModal();
+      });
+    });
+    document.querySelectorAll('.js-modal-close').forEach((btn) => {
+      btn.addEventListener('click', () => btn.closest('dialog')?.close());
+    });
+
+    // ---- nav current highlight ----
+    const navLinks = [...document.querySelectorAll('.gd-nav a')];
+    const sections = [...document.querySelectorAll('.gd-section')];
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        navLinks.forEach((a) => {
+          a.classList.toggle('is-current', a.getAttribute('href') === '#' + entry.target.id);
+        });
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach((s) => io.observe(s));
+  </script>
+</body>
+</html>

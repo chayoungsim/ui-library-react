@@ -31,6 +31,7 @@ $icon-sizes: (
     vertical-align: middle;
     font-size: 0;
     &--download {
+        //@include icon("download", map.get($icon-colors, "primary"), map.get($icon-sizes, "lg")); 
         @include icon("download"); 
     }
     &--box-arrow-right {
@@ -279,6 +280,24 @@ $icon-sizes: (
      .tx {
           font-size: 1.3rem;
           text-align: center;
+          color: var(--color-black);
      }
+  }
+}
+
+// --- 아래 코드 추가 ---
+
+// 색상 유틸리티 클래스 생성
+@each $name, $color in $icon-colors {
+  .icon-#{$name} {
+    background-color: $color;
+  }
+}
+
+// 크기 유틸리티 클래스 생성
+@each $name, $size in $icon-sizes {
+  .icon-#{$name} {
+    width: $size;
+    height: $size;
   }
 }

@@ -23,7 +23,7 @@ const PaginationPage = () => {
                 <Pagination
                     variant="outline"
                     currentPage={outlinePage}
-                    totalPages={20}
+                    totalPages={10}
                     onPageChange={setOutlinePage}
                 />
             </Box>

@@ -62,22 +62,13 @@
     }
   }
 
-  &__ellipsis {
-    @include flex-c;
-
-    min-width: 3.2rem;
-    height: 3.2rem;
-    color: var(--color-gray-500);
-  }
-
   /*
    * ==========================================================================
    * 2. 크기 (Size)
    * ==========================================================================
    */
   &--sm {
-    .pagination__link,
-    .pagination__ellipsis {
+    .pagination__link {
       min-width: 2.8rem;
       height: 2.8rem;
       font-size: 1.2rem;
@@ -85,8 +76,7 @@
   }
 
   &--lg {
-    .pagination__link,
-    .pagination__ellipsis {
+    .pagination__link {
       min-width: 4rem;
       height: 4rem;
       font-size: 1.6rem;

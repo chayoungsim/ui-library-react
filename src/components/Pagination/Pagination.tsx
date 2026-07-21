@@ -1,33 +1,23 @@
 import { forwardRef, useMemo } from 'react'
 import type { PaginationProps } from './Pagination.types'
+import useMediaQuery from '@/hooks/useMediaQuery'
 import './Pagination.scss'
 
-const ELLIPSIS = 'ellipsis' as const
+// src/styles/abstracts/_breakpoints.scss의 'lg'(1024px)와 동일한 기준입니다.
+const DESKTOP_QUERY = '(min-width: 1024px)'
 
-// 현재 페이지를 중심으로 표시할 페이지 번호 목록을 계산합니다 (양 끝은 "..."으로 생략).
-function getPageItems(currentPage: number, totalPages: number, siblingCount: number) {
-  const totalVisible = siblingCount * 2 + 5 // 처음, 끝, 현재, 좌우 형제, 생략(...) 2개
-
-  if (totalPages <= totalVisible) {
+// 생략기호 없이, 현재 페이지가 포함된 연속된 페이지 번호 묶음을 계산합니다.
+function getPageItems(currentPage: number, totalPages: number, maxVisible: number) {
+  if (totalPages <= maxVisible) {
     return Array.from({ length: totalPages }, (_, i) => i + 1)
   }
 
-  const leftSibling = Math.max(currentPage - siblingCount, 1)
-  const rightSibling = Math.min(currentPage + siblingCount, totalPages)
-  const showLeftEllipsis = leftSibling > 2
-  const showRightEllipsis = rightSibling < totalPages - 1
+  const start = Math.min(
+    Math.max(currentPage - Math.floor((maxVisible - 1) / 2), 1),
+    totalPages - maxVisible + 1,
+  )
 
-  const items: (number | typeof ELLIPSIS)[] = [1]
-
-  if (showLeftEllipsis) items.push(ELLIPSIS)
-  for (let page = leftSibling; page <= rightSibling; page += 1) {
-    if (page !== 1 && page !== totalPages) items.push(page)
-  }
-  if (showRightEllipsis) items.push(ELLIPSIS)
-
-  items.push(totalPages)
-
-  return items
+  return Array.from({ length: maxVisible }, (_, i) => start + i)
 }
 
 const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagination(
@@ -44,9 +34,14 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagination(
   },
   ref,
 ) {
+  // 데스크톱은 5개(형제 1개), 모바일은 3개(형제 0개)의 페이지 번호를 보여줍니다.
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  const effectiveSiblingCount = isDesktop ? siblingCount : Math.max(siblingCount - 1, 0)
+  const maxVisible = effectiveSiblingCount * 2 + 3
+
   const pageItems = useMemo(
-    () => getPageItems(currentPage, totalPages, siblingCount),
-    [currentPage, totalPages, siblingCount],
+    () => getPageItems(currentPage, totalPages, maxVisible),
+    [currentPage, totalPages, maxVisible],
   )
 
   const isFirstPage = currentPage <= 1
@@ -95,25 +90,19 @@ const Pagination = forwardRef<HTMLElement, PaginationProps>(function Pagination(
           </button>
         </li>
 
-        {pageItems.map((item, index) =>
-          item === ELLIPSIS ? (
-            <li key={`ellipsis-${index}`}>
-              <span className="pagination__ellipsis">…</span>
-            </li>
-          ) : (
-            <li key={item}>
-              <button
-                type="button"
-                className="pagination__link"
-                aria-label={`${item} 페이지`}
-                aria-current={item === currentPage ? 'page' : undefined}
-                onClick={() => goToPage(item)}
-              >
-                {item}
-              </button>
-            </li>
-          ),
-        )}
+        {pageItems.map((item) => (
+          <li key={item}>
+            <button
+              type="button"
+              className="pagination__link"
+              aria-label={`${item} 페이지`}
+              aria-current={item === currentPage ? 'page' : undefined}
+              onClick={() => goToPage(item)}
+            >
+              {item}
+            </button>
+          </li>
+        ))}
 
         <li>
           <button

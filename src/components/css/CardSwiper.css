@@ -1,0 +1,27 @@
+.cardSwiper {
+  position: relative;
+  width: 100%;
+}
+.cardSwiper__swiper {
+  width: 100%;
+  padding-bottom: 0.4rem;
+}
+.cardSwiper .swiper-slide {
+  height: auto;
+}
+.cardSwiper__item {
+  height: 100%;
+  opacity: 0;
+  transform: translateX(4rem);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: calc(var(--card-index, 0) * 0.08s);
+}
+.cardSwiper .card {
+  width: 100%;
+  height: 100%;
+}
+
+.cardSwiper.is-visible .cardSwiper__item {
+  opacity: 1;
+  transform: translateX(0);
+}

@@ -37,11 +37,14 @@
     background: var(--color-background);
     padding: 2rem;
     display: none;
-
+    overflow: hidden;
+    overflow-y: auto;
     &.is-open {
         display: block;
     }
-
+    > ul >li {
+       margin-bottom: 1rem; 
+    }
     a {
         color: var(--color-text);
         font-size: 1.6rem;
@@ -90,6 +93,7 @@
         font-weight: 500;
         font-size: 1.8rem;
         letter-spacing: -1px;
+        color: var(--color-text);
     }
 
     &.is-open {

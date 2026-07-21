@@ -57,6 +57,8 @@
 
 ```
 # 실무형 UI 라이브러리 구축 프로젝트 진행 UI Library
+- html UI Library 템플릿 구축 => http://10.10.10.15:34410/uiComponents/
+- React로 UI Library 템플릿 구축 => https://ui-library-blond-mu.vercel.app/
 # 공통 UI 컴포넌트/인터랙션 코드
 # 자동화·효율화 도구 정비, 자주 쓰는 컴포넌트 스니펫, ESLint/Prettier/Stylelint 설정
 # AI Agent 구축 ( AI Publisher Assistant )
