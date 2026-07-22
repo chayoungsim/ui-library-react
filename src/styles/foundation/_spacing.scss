@@ -17,3 +17,19 @@ $spacing-7: $spacing-base * 4.8; // 48px
   --spacing-6: #{$spacing-6};
   --spacing-7: #{$spacing-7};
 }
+
+
+.spacing-row {
+  display: flex;
+  gap: 2rem;
+}
+.spacing-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.3rem;
+}
+.spacing-block {
+  height: 5rem;
+  background: var(--color-gray-200)
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@your-company/ally-checker",
+  "version": "0.1.0",
+  "description": "웹 접근성 자동 검사 및 리포팅 도구",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "ally-check": "dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc && node scripts/copy-assets.mjs",
+    "start": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@axe-core/playwright": "^4.9.1",
+    "axe-core": "^4.9.1",
+    "commander": "^12.0.0",
+    "ejs": "^3.1.10",
+    "playwright": "^1.44.0"
+  },
+  "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/node": "^20.12.12",
+    "tsx": "^4.23.1",
+    "typescript": "^5.4.5"
+  }
+}

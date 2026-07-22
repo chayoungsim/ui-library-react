@@ -18,7 +18,6 @@ const ColorSwatch = ({ item }: ColorSwatchProps) => {
   const { varName, label, description } = item
   const [hex, setHex] = useState('')
   const colorRef = useRef<HTMLDivElement>(null)
-  usePageTitle ('Home - ui-library')
 
   useEffect(() => {
     if (colorRef.current) {
@@ -92,6 +91,8 @@ const buttonVariants: { variant: NonNullable<ButtonProps['variant']>; label: str
 ]
 
 const Home = () => {
+  usePageTitle('Home - ui-library')
+
   return (
     <div>
       <h2>Design System Preview</h2>
@@ -191,8 +192,41 @@ const Home = () => {
         </Box>
       </div>
       <div className="sect">
-        <h3>05 / Layout</h3>
-        <Box></Box>
+        <h3>05 / Spacing Scale</h3>
+        <Box>
+        <div className="spacing-row">
+            <div className="spacing-item"><div className="spacing-block" style={{width:"4px"}}></div><div className="spacing-value">4</div></div>
+            <div className="spacing-item"><div className="spacing-block" style={{width:"8px"}}></div><div className="spacing-value">8</div></div>
+            <div className="spacing-item"><div className="spacing-block" style={{width:"12px"}}></div><div className="spacing-value">12</div></div>
+            <div className="spacing-item"><div className="spacing-block" style={{width:"16px"}}></div><div className="spacing-value">16</div></div>
+            <div className="spacing-item"><div className="spacing-block" style={{width:"24px"}}></div><div className="spacing-value">24</div></div>
+            <div className="spacing-item"><div className="spacing-block" style={{width:"32px"}}></div><div className="spacing-value">32</div></div>
+        </div>
+        </Box>
+      </div>
+      <div className="sect">
+        <h3>06 / Border Radius Scale</h3>
+        <Box>
+        <div className="radius-row">
+          <div className="radius-item"><div className="radius-box" style={{borderRadius:"8px"}}></div><div className="radius-label">8px</div><div className="radius-context">Buttons</div></div>
+          <div className="radius-item"><div className="radius-box" style={{borderRadius:"14px"}}></div><div className="radius-label">14px</div><div className="radius-context">Badges</div></div>
+          <div className="radius-item"><div className="radius-box" style={{borderRadius:"20px"}}></div><div className="radius-label">20px</div><div className="radius-context">Cards</div></div>
+          <div className="radius-item"><div className="radius-box" style={{borderRadius:"32px"}}></div><div className="radius-label">32px</div><div className="radius-context">Large</div></div>
+          <div className="radius-item"><div className="radius-box" style={{borderRadius:"50%",width:"56px",height:"56px"}}></div>
+          <div className="radius-label">50%</div><div className="radius-context">Controls</div></div>
+        </div>
+        </Box>
+      </div>
+      <div className="sect">
+        <h3>07 / Elevation & Depth</h3>
+        <Box>
+          <div className="elevation-grid">
+            <div className="elevation-card" style={{ border: "1px solid #ebebeb" }}><div className="elevation-label">Flat</div><div className="elevation-desc">No shadow</div></div>
+            <div className="elevation-card" style={{ boxShadow: "var(--shadow-card)" }}><div className="elevation-label">Card</div><div className="elevation-desc">Three-layer warm</div></div>
+            <div className="elevation-card" style={{ boxShadow: "var(--shadow-hover)" }}><div className="elevation-label">Hover</div><div className="elevation-desc">Interactive lift</div></div>
+            <div className="elevation-card" style={{ boxShadow: "0 0 0 2px var(--near-black)" }}><div className="elevation-label">Focus</div><div className="elevation-desc">Dark focus ring</div></div>
+          </div>
+        </Box>
       </div>
     </div>
   )

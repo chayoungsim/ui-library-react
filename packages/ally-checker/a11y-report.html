@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>웹 접근성 검사 리포트</title>
+  <style>
+    :root {
+      --color-critical: #d93025;
+      --color-serious: #f29900;
+      --color-moderate: #fbbc04;
+      --color-minor: #1a73e8;
+      --color-bg-light: #f8f9fa;
+      --color-border: #dadce0;
+      --color-text: #202124;
+      --color-text-secondary: #5f6368;
+      --color-code-bg: #e8eaed;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--color-text);
+      margin: 0;
+      background-color: #fff;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    header {
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+    }
+    .summary {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .summary-item {
+      text-align: center;
+    }
+    .summary-item .count {
+      font-size: 2.5rem;
+      font-weight: 600;
+      display: block;
+    }
+    .summary-item .label {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+    }
+    .count.violations { color: var(--color-critical); }
+    .count.passes { color: #34a853; }
+    .count.incomplete { color: var(--color-serious); }
+    .count.inapplicable { color: var(--color-text-secondary); }
+    .metadata {
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+      margin-top: 0.5rem;
+    }
+    .metadata a {
+      color: var(--color-minor);
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .metadata a:hover {
+      text-decoration: underline;
+    }
+    h2 {
+      font-size: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 0.5rem;
+      margin-top: 3rem;
+    }
+    .violation-card {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .violation-header {
+      padding: 1rem 1.5rem;
+      background-color: var(--color-bg-light);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .violation-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+    .impact {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      margin-right: 0.5rem;
+      text-transform: capitalize;
+    }
+    .impact.critical { background-color: var(--color-critical); }
+    .impact.serious { background-color: var(--color-serious); }
+    .impact.moderate { background-color: var(--color-moderate); }
+    .impact.minor { background-color: var(--color-minor); }
+    .violation-body {
+      padding: 1.5rem;
+    }
+    .violation-body p {
+      margin: 0 0 1rem 0;
+    }
+    .node-list {
+      margin-top: 1.5rem;
+    }
+    .node-item {
+      border-top: 1px dashed var(--color-border);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+    .node-item:first-child {
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    code, pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      background-color: var(--color-code-bg);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 90%;
+    }
+    pre {
+      padding: 1em;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .tags {
+      margin-top: 0.5rem;
+    }
+    .tag {
+      display: inline-block;
+      background-color: var(--color-code-bg);
+      color: var(--color-text-secondary);
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>웹 접근성 검사 리포트</h1>
+      <p class="metadata">
+        <strong>검사 대상 URL:</strong> <a href="http://localhost:5173/" target="_blank">http://localhost:5173/</a><br>
+        <strong>검사 시간:</strong> 2026. 7. 22. 오전 10:53:48
+      </p>
+      <div class="summary">
+        <div class="summary-item">
+          <span class="count violations">3</span>
+          <span class="label">위반</span>
+        </div>
+        <div class="summary-item">
+          <span class="count passes">36</span>
+          <span class="label">통과</span>
+        </div>
+        <div class="summary-item">
+          <span class="count incomplete">0</span>
+          <span class="label">확인 필요</span>
+        </div>
+        <div class="summary-item">
+          <span class="count inapplicable">52</span>
+          <span class="label">해당 없음</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <h2>위반 항목 (3)</h2>
+
+      
+        
+          <div class="violation-card">
+            <div class="violation-header">
+              <h3>
+                <span class="impact serious">serious</span>
+                Elements must meet minimum color contrast ratio thresholds
+              </h3>
+              <div class="tags">
+                
+                  <span class="tag">cat.color</span>
+                
+                  <span class="tag">wcag2aa</span>
+                
+                  <span class="tag">wcag143</span>
+                
+                  <span class="tag">TTv5</span>
+                
+                  <span class="tag">TT13.c</span>
+                
+                  <span class="tag">EN-301-549</span>
+                
+                  <span class="tag">EN-9.1.4.3</span>
+                
+                  <span class="tag">ACT</span>
+                
+                  <span class="tag">RGAAv4</span>
+                
+                  <span class="tag">RGAA-3.2.1</span>
+                
+              </div>
+            </div>
+            <div class="violation-body">
+              <p>Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds</p>
+              <p><strong>도움말:</strong> <a href="https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright" target="_blank">https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright</a></p>
+              
+              <h4>영향 받는 요소 (21개)</h4>
+              <div class="node-list">
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(1) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;브랜드 기본 컬러&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(2) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;primary 호버 상태&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(3) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;페이지 배경&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(4) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;기본 텍스트&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(5) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;링크 텍스트&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(6) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;테두리&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-card:nth-child(7) &gt; .color-card-body &gt; .color-card-desc</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;color-card-desc&#34;&gt;에러 상태&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.typo-row:nth-child(1) &gt; .typo-meta</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;typo-meta&#34;&gt;H1 — 4.2rem(42px) / 700 / line-height 1.2 / --font-size-h1&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.typo-row:nth-child(2) &gt; .typo-meta</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;typo-meta&#34;&gt;H2 — 3.2rem(32px) / 700 / line-height 1.2 / --font-size-h2&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.typo-row:nth-child(3) &gt; .typo-meta</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;typo-meta&#34;&gt;H3 — 2.8rem(28px) / 700 / line-height 1.2 / --font-size-h3&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.typo-row:nth-child(4) &gt; .typo-meta</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;typo-meta&#34;&gt;H4 — 2.2rem(22px) / 700 / line-height 1.2 / --font-size-h4&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.typo-row:nth-child(5) &gt; .typo-meta</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;typo-meta&#34;&gt;Body — 1.6rem(16px) / 400 / line-height 1.5 / --font-size-base&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.typo-row:nth-child(6) &gt; .typo-meta</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;typo-meta&#34;&gt;Body Emphasis — 1.6rem(16px) / 700 / line-height 1.5 / --font-weight-bold&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.btn--primary.btn--md &gt; .btn__text</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;btn__text&#34;&gt;Primary&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 3.97 (foreground color: #ffffff, background color: #007bff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(1) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;primary&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(2) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;secondary&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.btn--outline &gt; .btn__text</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;btn__text&#34;&gt;Outline&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 3.97 (foreground color: #007bff, background color: #ffffff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(3) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;outline&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.btn--text &gt; .btn__text</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;btn__text&#34;&gt;Text&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 3.97 (foreground color: #007bff, background color: #ffffff, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(4) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;text&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 2.07 (foreground color: #adb5bd, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.btn--lg &gt; .btn__text</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;btn__text&#34;&gt;로그인&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Element has insufficient color contrast of 3.97 (foreground color: #ffffff, background color: #007bff, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1</pre>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        
+          <div class="violation-card">
+            <div class="violation-header">
+              <h3>
+                <span class="impact moderate">moderate</span>
+                Document should have one main landmark
+              </h3>
+              <div class="tags">
+                
+                  <span class="tag">cat.semantics</span>
+                
+                  <span class="tag">best-practice</span>
+                
+              </div>
+            </div>
+            <div class="violation-body">
+              <p>Ensure the document has a main landmark</p>
+              <p><strong>도움말:</strong> <a href="https://dequeuniversity.com/rules/axe/4.12/landmark-one-main?application=playwright" target="_blank">https://dequeuniversity.com/rules/axe/4.12/landmark-one-main?application=playwright</a></p>
+              
+              <h4>영향 받는 요소 (1개)</h4>
+              <div class="node-list">
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>html</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;html lang=&#34;en&#34; data-theme=&#34;light&#34; style=&#34;--vh: 7.2px;&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix all of the following:
+  Document does not have a main landmark</pre>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        
+          <div class="violation-card">
+            <div class="violation-header">
+              <h3>
+                <span class="impact moderate">moderate</span>
+                All page content should be contained by landmarks
+              </h3>
+              <div class="tags">
+                
+                  <span class="tag">cat.keyboard</span>
+                
+                  <span class="tag">best-practice</span>
+                
+                  <span class="tag">RGAAv4</span>
+                
+                  <span class="tag">RGAA-9.2.1</span>
+                
+              </div>
+            </div>
+            <div class="violation-body">
+              <p>Ensure all page content is contained by landmarks</p>
+              <p><strong>도움말:</strong> <a href="https://dequeuniversity.com/rules/axe/4.12/region?application=playwright" target="_blank">https://dequeuniversity.com/rules/axe/4.12/region?application=playwright</a></p>
+              
+              <h4>영향 받는 요소 (23개)</h4>
+              <div class="node-list">
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>#container &gt; div &gt; h2</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;h2&gt;Design System Preview&lt;/h2&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.color-section</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div class=&#34;sect color-section&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.sect:nth-child(3)</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div class=&#34;sect&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.sect:nth-child(4) &gt; h3</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;h3&gt;03 / Buttons&lt;/h3&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(1) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;primary&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(2) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;secondary&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(3) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;outline&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.button-preview-item:nth-child(4) &gt; .button-preview-label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;button-preview-label&#34;&gt;variant=&#34;text&#34;&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.sect:nth-child(5) &gt; h3</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;h3&gt;04 / Form Elements&lt;/h3&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.login-card &gt; h4</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;h4&gt;로그인&lt;/h4&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.form-field:nth-child(2)</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div class=&#34;form-field&#34;&gt;&lt;label for=&#34;preview-email&#34;&gt;이메일&lt;/label&gt;&lt;input class=&#34;input input--md&#34; aria-invalid=&#34;false&#34; id=&#34;preview-email&#34; placeholder=&#34;you@example.com&#34; type=&#34;email&#34;&gt;&lt;/div&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.form-field:nth-child(3)</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div class=&#34;form-field&#34;&gt;&lt;label for=&#34;preview-password&#34;&gt;비밀번호&lt;/label&gt;&lt;input class=&#34;input input--md&#34; aria-invalid=&#34;false&#34; id=&#34;preview-password&#34; placeholder=&#34;••••••••&#34; type=&#34;password&#34;&gt;&lt;/div&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.form-field:nth-child(4)</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div class=&#34;form-field&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.form-field-legend</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;form-field-legend&#34;&gt;계정 유형&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.radio.radio--md:nth-child(1) &gt; .radio__input[type=&#34;radio&#34;][name=&#34;preview-account-type&#34;]</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;input class=&#34;radio__input&#34; type=&#34;radio&#34; checked=&#34;&#34; name=&#34;preview-account-type&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.radio.radio--md:nth-child(1) &gt; .radio__label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;radio__label&#34;&gt;개인&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.radio.radio--md:nth-child(2) &gt; .radio__input[type=&#34;radio&#34;][name=&#34;preview-account-type&#34;]</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;input class=&#34;radio__input&#34; type=&#34;radio&#34; name=&#34;preview-account-type&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.radio.radio--md:nth-child(2) &gt; .radio__label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;radio__label&#34;&gt;기업&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.checkbox__input</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;input class=&#34;checkbox__input&#34; type=&#34;checkbox&#34; checked=&#34;&#34;&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.checkbox__label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;checkbox__label&#34;&gt;로그인 상태 유지&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.switch__label</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;span class=&#34;switch__label&#34;&gt;2단계 인증&lt;/span&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>.sect:nth-child(6)</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div class=&#34;sect&#34;&gt;&lt;h3&gt;05 / Layout&lt;/h3&gt;&lt;div class=&#34;box&#34;&gt;&lt;/div&gt;&lt;/div&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+                  <div class="node-item">
+                    <p><strong>요소 선택자:</strong> <code>#root &gt; div:nth-child(3)</code></p>
+                    <p><strong>HTML:</strong></p>
+                    <pre><code>&lt;div&gt;Footer&lt;/div&gt;</code></pre>
+                    <p><strong>해결 방법:</strong></p>
+                    <pre>Fix any of the following:
+  Some page content is not contained by landmarks</pre>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        
+      
+    </main>
+  </div>
+</body>
+</html>
