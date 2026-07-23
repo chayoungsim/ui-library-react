@@ -5,7 +5,7 @@ import App from '../App.tsx'
 import Notfound from '../pages/error/Notfound.tsx'
 import Home from '../pages/main/Home.tsx'
 import Docs from '../pages/docs/Docs.tsx'
-import Theme from '../pages/theme/Theme.tsx'
+import DesignSystem from '../pages/design/DesignSystem.tsx'
 import Icons from '@/pages/icons/Icons.tsx'
 
 import ButtonPage from '../pages/atom/ButtonPage.tsx'
@@ -24,8 +24,8 @@ import CardPage from '@/pages/atom/CardPage.tsx'
 import SwitchPage from '@/pages/atom/SwitchPage.tsx'
 import HamburgerPage from '@/pages/atom/HamburgerPage.tsx'
 
-import HeaderPage from '@/pages/layout/HeaderPage.tsx'
-import SliderPage from '@/pages/layout/SliderPage.tsx'
+import HeaderPage from '@/pages/patten/HeaderPage.tsx'
+import SliderPage from '@/pages/patten/SliderPage.tsx'
 
 
 export type RouteHandle = {
@@ -49,7 +49,7 @@ export function getChildRoutes(route: AppRoute): AppRoute[] {
 }
 
 const COMPONENTS_PATH = '/components'
-const LAYOUT_PATH = '/layout'
+const PATTEN_PATH = '/patten'
 
 export const routes: AppRoute[] = [
   {
@@ -66,6 +66,11 @@ export const routes: AppRoute[] = [
         path: '/docs',
         handle: { title: 'Docs' },
         element: <Docs />,
+      },
+      {
+        path: '/design',
+        handle: { title: 'Design' },
+        element: <DesignSystem />,
       },
       {
         path: COMPONENTS_PATH,
@@ -153,26 +158,22 @@ export const routes: AppRoute[] = [
           },
         ],
       },
+      
       {
-        path: '/theme',
-        handle: { title: 'Theme' },
-        element: <Theme />,
-      },
-      {
-        path: '/layout',
-        handle: { title: 'Layout' },        
+        path: '/patten',
+        handle: { title: 'Pattem' },        
         children: [
           {
             index: true,
-            element: <Navigate to={`${LAYOUT_PATH}/header`} replace />,
+            element: <Navigate to={`${PATTEN_PATH}/header`} replace />,
           },
           {
-            path: `${LAYOUT_PATH}/header`,
+            path: `${PATTEN_PATH}/header`,
             handle: { title: 'Header' },
             element: <HeaderPage />,
           },
           {
-            path: `${LAYOUT_PATH}/slider`,
+            path: `${PATTEN_PATH}/slider`,
             handle: { title: 'Slider' },
             element: <SliderPage />,
           },

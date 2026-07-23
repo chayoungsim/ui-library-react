@@ -13,10 +13,8 @@ const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(function Breadcrumb(
   ref,
 ) {
   const matches = useMatches() as UIMatch<unknown, RouteHandle | undefined>[]
-  const crumbs = matches.filter(hasTitle)
-
-  // handle.title이 정의된 라우트가 없으면(예: 홈) breadcrumb를 표시하지 않습니다.
-  if (crumbs.length === 0) return null
+  // pathname이 '/'인 항목(홈)은 이미 아래 고정 Home 링크로 표시되므로 중복되지 않게 제외합니다.
+  const crumbs = matches.filter(hasTitle).filter((match) => match.pathname !== '/')
 
   const breadcrumbClasses = ['breadcrumb', className || ''].join(' ').trim()
 

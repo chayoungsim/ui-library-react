@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>접근성 체크리스트 | KWCAG 2.2 점검</title>
+<meta name="description" content="KWCAG 2.2 검사항목 33개 기반 사내 웹 접근성 점검 체크리스트">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — 퍼블리싱 가이드와 동일 체계
+   ============================================================ */
+:root{
+  --c-paper:#FAFAF8; --c-surface:#FFFFFF;
+  --c-ink:#14161A; --c-ink-2:#5A6069; --c-ink-3:#8B909A;
+  --c-rule:#E3E3DD; --c-rule-strong:#C9C9C1;
+  --c-blue:#1B3FD1; --c-blue-wash:#EEF1FE;
+  --c-green:#0F7B54; --c-green-wash:#E9F5EF;
+  --c-red:#B21E4B;   --c-red-wash:#FCEDF1;
+  --c-amber:#8A5A00; --c-amber-wash:#FBF3E2;
+
+  --color-bg:var(--c-paper);
+  --color-surface:var(--c-surface);
+  --color-text-strong:var(--c-ink);
+  --color-text:var(--c-ink-2);
+  --color-text-mute:var(--c-ink-3);
+  --color-border:var(--c-rule);
+  --color-border-strong:var(--c-rule-strong);
+  --color-primary:var(--c-blue);
+  --color-primary-wash:var(--c-blue-wash);
+
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem;  --space-8:3rem;   --space-10:4rem;
+
+  --radius-sm:3px; --radius-md:6px; --radius-lg:10px; --radius-full:999px;
+  --shadow-sm:0 1px 2px rgba(20,22,26,.06);
+
+  --z-sticky:100; --z-header:300;
+
+  --font-body:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --focus-ring:2px solid var(--color-primary);
+  --focus-offset:2px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-body);font-size:1rem;line-height:1.7;letter-spacing:-.01em;
+}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:var(--color-primary)}
+code,kbd{font-family:var(--font-mono);font-size:.85em}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-offset);border-radius:2px}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+}
+.skip-nav{
+  position:absolute;left:var(--space-4);top:-200%;z-index:999;
+  padding:var(--space-3) var(--space-5);
+  background:var(--color-text-strong);color:#fff;font-weight:600;
+  text-decoration:none;border-radius:0 0 var(--radius-md) var(--radius-md);
+}
+.skip-nav:focus{top:0}
+
+.wrap{max-width:62rem;margin:0 auto;padding:0 var(--space-5)}
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead{padding:var(--space-10) 0 var(--space-6)}
+.masthead__eyebrow{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-4);
+}
+.masthead__title{
+  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.15;letter-spacing:-.035em;
+  font-weight:800;color:var(--color-text-strong);
+}
+.masthead__lead{margin-top:var(--space-4);max-width:44rem}
+
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));
+  gap:1px;background:var(--color-border);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);overflow:hidden;margin-top:var(--space-6);
+}
+.stats__cell{background:var(--color-surface);padding:var(--space-4)}
+.stats__num{
+  display:block;font-family:var(--font-mono);font-size:1.6rem;font-weight:700;
+  color:var(--color-text-strong);line-height:1.2;
+}
+.stats__label{display:block;font-size:.78rem;color:var(--color-text-mute);margin-top:var(--space-1)}
+
+/* ============================================================
+   진행률 바 — 시그니처
+   ============================================================ */
+.tracker{
+  position:sticky;top:0;z-index:var(--z-header);
+  background:rgba(250,250,248,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--color-border);
+}
+.tracker__inner{
+  max-width:62rem;margin:0 auto;padding:var(--space-3) var(--space-5);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);
+}
+.tracker__meter{flex:1 1 12rem;min-width:10rem}
+.tracker__bar{
+  height:.55rem;background:var(--color-border);border-radius:var(--radius-full);
+  overflow:hidden;
+}
+.tracker__fill{
+  display:block;height:100%;width:0%;background:var(--color-primary);
+  border-radius:var(--radius-full);transition:width .25s ease;
+}
+.tracker__count{
+  font-family:var(--font-mono);font-size:.75rem;color:var(--color-text-mute);
+  margin-top:var(--space-1);display:block;
+}
+.tracker__count b{color:var(--color-text-strong);font-weight:700}
+
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-1)}
+.filters__btn{
+  appearance:none;border:1px solid var(--color-border-strong);
+  background:var(--color-surface);color:var(--color-text);
+  padding:.35rem .8rem;border-radius:var(--radius-full);
+  font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.filters__btn:hover{border-color:var(--color-text-mute)}
+.filters__btn[aria-pressed="true"]{
+  background:var(--color-text-strong);border-color:var(--color-text-strong);color:#fff;
+}
+.filters__reset{
+  appearance:none;border:0;background:transparent;color:var(--color-text-mute);
+  font-family:inherit;font-size:.78rem;cursor:pointer;text-decoration:underline;
+  padding:.35rem .5rem;border-radius:var(--radius-sm);
+}
+.filters__reset:hover{color:var(--c-red)}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{padding:var(--space-8) 0;border-top:1px solid var(--color-border)}
+.section__head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-3);
+  margin-bottom:var(--space-2);
+}
+.section__num{
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.1em;color:var(--color-primary);
+}
+.section__title{
+  font-size:1.4rem;letter-spacing:-.025em;font-weight:700;color:var(--color-text-strong);
+}
+.section__progress{
+  margin-left:auto;font-family:var(--font-mono);font-size:.72rem;
+  color:var(--color-text-mute);white-space:nowrap;
+}
+.section__desc{margin-bottom:var(--space-5);max-width:46rem;font-size:.93rem}
+
+/* ============================================================
+   CHECK ITEM
+   ============================================================ */
+.checks{
+  border:1px solid var(--color-border);border-radius:var(--radius-lg);
+  background:var(--color-surface);overflow:hidden;
+}
+.check{border-bottom:1px solid var(--color-border)}
+.check:last-child{border-bottom:0}
+.check.is-hidden{display:none}
+
+.check__main{
+  display:flex;align-items:flex-start;gap:var(--space-3);
+  padding:var(--space-4);cursor:pointer;
+}
+.check__main:hover{background:var(--c-paper)}
+.check__box{
+  flex:none;width:1.2rem;height:1.2rem;margin:.3rem 0 0;
+  accent-color:var(--color-primary);cursor:pointer;
+}
+.check__body{flex:1;min-width:0}
+.check__title{
+  font-size:.95rem;font-weight:600;color:var(--color-text-strong);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);
+}
+.check__desc{margin-top:var(--space-1);font-size:.87rem;color:var(--color-text)}
+.check__desc code{
+  background:var(--c-paper);padding:.1em .4em;border-radius:var(--radius-sm);
+  color:var(--color-text-strong);
+}
+
+.check input:checked ~ .check__body .check__title{
+  color:var(--color-text-mute);text-decoration:line-through;text-decoration-thickness:1px;
+}
+.check input:checked ~ .check__body .check__desc{color:var(--color-text-mute)}
+
+.tag{
+  display:inline-block;padding:.1em .55em;border-radius:var(--radius-full);
+  font-family:var(--font-mono);font-size:.66rem;font-weight:500;
+  border:1px solid currentColor;white-space:nowrap;
+}
+.tag--req{color:var(--c-green);background:var(--c-green-wash)}
+.tag--rec{color:var(--color-primary);background:var(--color-primary-wash)}
+.tag--warn{color:var(--c-amber);background:var(--c-amber-wash)}
+
+/* 코드 접기 */
+.check details{margin:var(--space-3) 0 0}
+.check summary{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-family:var(--font-mono);font-size:.72rem;color:var(--color-primary);
+  cursor:pointer;padding:.2rem .1rem;border-radius:var(--radius-sm);list-style:none;
+}
+.check summary::-webkit-details-marker{display:none}
+.check summary::before{content:"▸";transition:transform .15s ease;display:inline-block}
+.check details[open] summary::before{transform:rotate(90deg)}
+.check pre{
+  margin:var(--space-2) 0 0;padding:var(--space-3) var(--space-4);
+  background:#12141A;color:#D9DEE8;border-radius:var(--radius-md);
+  font-family:var(--font-mono);font-size:.75rem;line-height:1.75;
+  overflow-x:auto;tab-size:2;
+}
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.note{
+  border-left:3px solid var(--color-primary);background:var(--color-primary-wash);
+  padding:var(--space-4) var(--space-5);border-radius:0 var(--radius-md) var(--radius-md) 0;
+  margin:var(--space-5) 0;font-size:.89rem;color:var(--color-text-strong);
+}
+.note--warn{border-color:var(--c-amber);background:var(--c-amber-wash)}
+.note code{background:rgba(255,255,255,.7);padding:.1em .4em;border-radius:var(--radius-sm)}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--color-border);border-radius:var(--radius-md)}
+.tbl{width:100%;border-collapse:collapse;background:var(--color-surface);font-size:.86rem}
+.tbl caption{
+  padding:var(--space-3) var(--space-4);text-align:left;font-weight:600;
+  color:var(--color-text-strong);border-bottom:1px solid var(--color-border);
+}
+.tbl th,.tbl td{padding:var(--space-2) var(--space-4);text-align:left;border-bottom:1px solid var(--color-border)}
+.tbl thead th{
+  background:var(--c-paper);font-family:var(--font-mono);font-size:.7rem;
+  letter-spacing:.04em;color:var(--color-text-mute);font-weight:500;
+}
+.tbl tbody th{font-family:var(--font-mono);font-size:.75rem;color:var(--color-primary);font-weight:700;white-space:nowrap}
+.tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:0}
+
+/* ============================================================
+   TOP 10
+   ============================================================ */
+.rank{counter-reset:rank;border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
+.rank__item{
+  display:flex;gap:var(--space-4);padding:var(--space-3) var(--space-4);
+  background:var(--color-surface);align-items:flex-start;
+}
+.rank__item + .rank__item{border-top:1px solid var(--color-border)}
+.rank__item::before{
+  counter-increment:rank;content:counter(rank,decimal-leading-zero);
+  font-family:var(--font-mono);font-size:.8rem;font-weight:700;
+  color:var(--c-red);flex:none;padding-top:.15rem;
+}
+.rank__text{flex:1;font-size:.9rem;color:var(--color-text-strong)}
+.rank__text .tag{margin-left:var(--space-2)}
+
+.foot{padding:var(--space-8) 0 var(--space-10);font-size:.82rem;color:var(--color-text-mute);border-top:1px solid var(--color-border)}
+.foot dl{display:flex;flex-wrap:wrap;gap:var(--space-5);font-family:var(--font-mono);font-size:.73rem}
+.foot dt{color:var(--color-text-mute)}
+.foot dd{margin:0;color:var(--color-text-strong)}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print{
+  .tracker,.skip-nav,.filters,.check summary,.check pre{display:none !important}
+  body{background:#fff;font-size:10pt}
+  .section{break-inside:avoid;padding:1rem 0}
+  .checks,.check{break-inside:avoid}
+  .note{background:#fff;border:1px solid #999}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-nav">본문 바로가기</a>
+
+<!-- // 진행률 트래커 -->
+<div class="tracker">
+  <div class="tracker__inner">
+    <div class="tracker__meter">
+      <div class="tracker__bar"><span class="tracker__fill" id="progress-fill"></span></div>
+      <span class="tracker__count" id="progress-count" role="status">
+        <b>0</b> / 0 완료
+      </span>
+      <span class="sr-only" id="progress-label">전체 점검 진행률</span>
+    </div>
+
+    <div class="filters" role="group" aria-label="항목 필터">
+      <button type="button" class="filters__btn" data-filter="all" aria-pressed="true">전체</button>
+      <button type="button" class="filters__btn" data-filter="todo" aria-pressed="false">미완료만</button>
+      <button type="button" class="filters__btn" data-filter="req" aria-pressed="false">법정 필수만</button>
+    </div>
+    <button type="button" class="filters__reset" id="reset-btn">전체 해제</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">웹 접근성 점검 · KWCAG 2.2 기준</p>
+      <h1 class="masthead__title">자동 검사로는<br>절반도 잡히지 않습니다</h1>
+      <p class="masthead__lead">
+        Lighthouse 접근성 100점은 통과가 아닙니다. <code>alt="이미지"</code>도 통과시킵니다.
+        이 체크리스트는 도구가 잡지 못하는 항목까지 포함해 사람이 직접 확인하는 순서로 정리한 것입니다.
+      </p>
+
+      <div class="stats">
+        <div class="stats__cell"><span class="stats__num">4</span><span class="stats__label">원칙</span></div>
+        <div class="stats__cell"><span class="stats__num">14</span><span class="stats__label">지침</span></div>
+        <div class="stats__cell"><span class="stats__num">33</span><span class="stats__label">검사항목</span></div>
+        <div class="stats__cell"><span class="stats__num">30<span style="font-size:1rem">%</span></span><span class="stats__label">자동 검사 적발률</span></div>
+      </div>
+
+      <div class="note">
+        <b>KWCAG 2.2는 법정 표준입니다.</b>
+        『지능정보화기본법』과 『장애인차별금지법』에 근거하므로 공공기관 프로젝트에서는 선택이 아니라 의무입니다.
+        <span class="tag tag--req">필수</span> 표시는 KWCAG 검사항목,
+        <span class="tag tag--rec">권장</span> 표시는 WCAG 2.2 AA 수준의 실무 권장 사항입니다.
+      </div>
+    </header>
+
+    <!-- ============ 01 문서 기본 구조 ============ -->
+    <section class="section" id="s1" aria-labelledby="s1-title">
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title" id="s1-title">문서 기본 구조</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">스타터 템플릿에 넣어두면 매 프로젝트에서 자동으로 통과하는 항목들입니다.</p>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">기본 언어 명시 <span class="tag tag--req">7.1.1</span></span>
+              <span class="check__desc"><code>&lt;html lang="ko"&gt;</code> — 다른 언어 영역에는 해당 요소에 별도 지정</span>
+              <details><summary>코드</summary>
+<pre>&lt;html lang="ko"&gt;
+...
+&lt;span lang="ja"&gt;東京&lt;/span&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">페이지마다 고유한 title <span class="tag tag--req">6.4.2</span></span>
+              <span class="check__desc">전 페이지에 "OOO에 오신 것을 환영합니다"를 쓰지 않습니다. 팝업창·iframe에도 각각 제목이 필요합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">건너뛰기 링크가 초점 시 화면에 보임 <span class="tag tag--req">6.4.1</span></span>
+              <span class="check__desc"><code>sr-only</code>로 영원히 숨기면 위반입니다. 이 페이지에서 <kbd>Tab</kbd>을 눌러 확인해보세요.</span>
+              <details><summary>코드</summary>
+<pre>&lt;a href="#main" class="skip-nav"&gt;본문 바로가기&lt;/a&gt;
+
+.skip-nav { position:absolute; left:0; top:-100%; }
+.skip-nav:focus { top:0; }</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">제목 레벨을 건너뛰지 않음 <span class="tag tag--req">6.4.2</span></span>
+              <span class="check__desc">글자가 작다는 이유로 <code>h2</code>를 <code>h4</code>로 쓰지 않습니다. 크기는 CSS로 해결합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">랜드마크 요소 사용 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc"><code>header</code> <code>nav</code> <code>main</code> <code>aside</code> <code>footer</code> — <code>div.header</code>가 아닌 실제 시맨틱 요소로</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">콘텐츠 선형구조가 논리적 <span class="tag tag--req">5.3.2</span></span>
+              <span class="check__desc">CSS를 전부 끄고 위에서 아래로 읽었을 때 순서가 맞는지. <code>order</code>, <code>row-reverse</code>, <code>position:absolute</code>로 시각적 순서를 바꿨다면 확인 필요합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">마크업 문법 오류 · id 중복 없음 <span class="tag tag--req">8.1.1</span></span>
+              <span class="check__desc">React에서 컴포넌트를 반복 렌더할 때 <code>id</code> 중복이 자주 발생합니다. <code>validator.w3.org</code>로 확인하세요.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 02 이미지 · 미디어 ============ -->
+    <section class="section" id="s2" aria-labelledby="s2-title">
+      <div class="section__head">
+        <span class="section__num">02</span>
+        <h2 class="section__title" id="s2-title">이미지 · 미디어</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">의미 있는 이미지에 적절한 대체 텍스트 <span class="tag tag--req">5.1.1</span></span>
+              <span class="check__desc"><code>alt="이미지"</code>, <code>alt="img01"</code>은 없는 것과 같습니다. 이미지 링크·버튼은 <b>목적지나 기능</b>을 씁니다.</span>
+              <details><summary>코드</summary>
+<pre>&lt;img src="chart.png"
+     alt="2026년 분기별 매출: 1분기 12억, 2분기 15억..."&gt;
+
+&lt;a href="/about"&gt;
+  &lt;img src="logo.png" alt="회사소개 페이지로 이동"&gt;
+&lt;/a&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">장식 이미지는 빈 대체 텍스트 <span class="tag tag--req">5.1.1</span></span>
+              <span class="check__desc"><code>alt</code> 속성 자체를 생략하면 스크린리더가 파일명을 읽습니다. SVG는 <code>aria-hidden="true"</code>.</span>
+              <details><summary>코드</summary>
+<pre>&lt;img src="deco-line.png" alt=""&gt;
+&lt;svg aria-hidden="true" focusable="false"&gt;...&lt;/svg&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">아이콘 전용 버튼에 텍스트 대안 <span class="tag tag--req">5.1.1</span></span>
+              <details><summary>코드</summary>
+<pre>&lt;button type="button"&gt;
+  &lt;svg aria-hidden="true" focusable="false"&gt;...&lt;/svg&gt;
+  &lt;span class="sr-only"&gt;메뉴 열기&lt;/span&gt;
+&lt;/button&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">의미 있는 배경 이미지에 대체 수단 <span class="tag tag--req">5.1.1</span></span>
+              <span class="check__desc">CSS <code>background-image</code>로 넣은 텍스트 이미지는 스크린리더가 읽지 못합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">영상에 자막 · 대본 · 수어 중 하나 이상 <span class="tag tag--req">5.2.1</span></span>
+              <span class="check__desc">음성만 있는 콘텐츠도 대본이 필요하고, 대사 없이 영상만 있으면 화면해설을 제공합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">자동 재생 소리 없음 <span class="tag tag--req">5.4.2</span></span>
+              <span class="check__desc">3초 이상 재생되는 소리는 정지·일시정지·음량조절 수단이 필수입니다. 배경음악 요구가 들어오면 이 항목을 근거로 제어 UI를 함께 요청하세요.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">초당 3~50회 깜빡임 · 번쩍임 없음 <span class="tag tag--req">6.3.1</span></span>
+              <span class="check__desc">화면 면적의 10%를 넘는 번쩍임을 특히 주의합니다. 광과민성 발작을 유발할 수 있습니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 03 색 · 시각적 표현 ============ -->
+    <section class="section" id="s3" aria-labelledby="s3-title">
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title" id="s3-title">색 · 시각적 표현</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">텍스트 명도 대비 4.5:1 이상 <span class="tag tag--req">5.4.3</span></span>
+              <span class="check__desc">18pt 이상 또는 14pt 굵은 글씨는 3:1까지 허용. 흰 배경에 <code>#999</code>는 미달(약 2.8:1)이며 <code>#767676</code>부터 통과합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">텍스트 아닌 요소도 3:1 이상 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">버튼 테두리, 입력창 경계, 체크박스, 아이콘, 그래프. 연한 회색 테두리 입력창이 여기서 자주 걸립니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">색만으로 정보를 전달하지 않음 <span class="tag tag--req">5.4.1</span></span>
+              <span class="check__desc">필수 표시, 오류 표시, 그래프 범례 — 색 + 텍스트 또는 무늬를 함께 제공합니다.</span>
+              <details><summary>코드</summary>
+<pre>&lt;!-- 빨간 별표만으로는 부족 --&gt;
+&lt;label&gt;
+  이름
+  &lt;span aria-hidden="true"&gt;*&lt;/span&gt;
+  &lt;span class="sr-only"&gt;(필수)&lt;/span&gt;
+&lt;/label&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">이웃한 콘텐츠가 시각적으로 구분됨 <span class="tag tag--req">5.4.4</span></span>
+              <span class="check__desc">테두리, 구분선, 배경색 차이, 충분한 간격 중 하나 이상. 카드가 배경과 같은 색이고 그림자도 없으면 경계를 인식할 수 없습니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">지시사항이 감각에 의존하지 않음 <span class="tag tag--req">5.3.3</span></span>
+              <span class="check__desc">"오른쪽 버튼" · "빨간 버튼"이 아니라 "저장 버튼"이라고 씁니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">200% 확대 시 콘텐츠 손실 없음 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">400% 확대 시 세로 스크롤만 발생해야 합니다. 고정 높이 컨테이너에 <code>overflow:hidden</code>이 있으면 대부분 여기서 깨집니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">user-scalable=no 사용 안 함 <span class="tag tag--rec">권장</span></span>
+              <details><summary>코드</summary>
+<pre>&lt;!-- 확대를 막지 않습니다 --&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 04 키보드 · 초점 ============ -->
+    <section class="section" id="s4" aria-labelledby="s4-title">
+      <div class="section__head">
+        <span class="section__num">04</span>
+        <h2 class="section__title" id="s4-title">키보드 · 초점</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">가장 많이 위반하고, 가장 쉽게 확인할 수 있는 영역입니다. 마우스를 치우고 <kbd>Tab</kbd>만으로 끝까지 가보세요.</p>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">모든 기능을 키보드만으로 사용 가능 <span class="tag tag--req">6.1.1</span></span>
+              <span class="check__desc">조작 횟수가 많은 건 문제되지 않습니다. <b>도달 불가능한 것</b>이 문제입니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">div · span에 클릭 이벤트를 걸지 않음 <span class="tag tag--req">6.1.1</span></span>
+              <span class="check__desc">부득이하면 <code>role="button"</code> + <code>tabindex="0"</code> + Enter/Space 핸들러를 전부 직접 구현해야 합니다. 그냥 <code>&lt;button&gt;</code>을 쓰세요.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">초점 표시가 항상 보임 <span class="tag tag--req">6.1.2</span></span>
+              <span class="check__desc"><code>outline:none</code>만 쓰고 대체 스타일이 없으면 명백한 위반입니다. <code>:focus-visible</code>을 쓰면 키보드 탐색 시에만 표시되어 디자인 요구와 양립합니다.</span>
+              <details><summary>코드</summary>
+<pre>:root {
+  --focus-ring: 2px solid var(--color-primary);
+  --focus-offset: 2px;
+}
+.ui-button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">초점 이동 순서가 논리적 <span class="tag tag--req">6.1.2</span></span>
+              <span class="check__desc"><code>tabindex</code>에 양수(1, 2, 3...)를 쓰면 전체 순서가 망가집니다. <code>0</code>과 <code>-1</code>만 사용합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">키보드 트랩 없음 <span class="tag tag--req">6.1.2</span></span>
+              <span class="check__desc">에디터, 지도, 임베드 영역에서 자주 발생합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">단일 문자 단축키 오동작 방지 <span class="tag tag--req">6.1.4</span></span>
+              <span class="check__desc">끌 수 있거나, 조합키로 재설정 가능하거나, 초점을 받았을 때만 동작해야 합니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 05 폼 ============ -->
+    <section class="section" id="s5" aria-labelledby="s5-title">
+      <div class="section__head">
+        <span class="section__num">05</span>
+        <h2 class="section__title" id="s5-title">폼 · 입력</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">모든 입력에 연결된 레이블 <span class="tag tag--req">7.3.2</span></span>
+              <span class="check__desc"><b>placeholder는 레이블이 아닙니다.</b> 입력을 시작하면 사라지고 명도 대비도 낮습니다. 숨겨야 하면 <code>sr-only</code>를 쓰세요 — <code>display:none</code>은 스크린리더도 못 읽습니다.</span>
+              <details><summary>코드</summary>
+<pre>&lt;label for="email"&gt;이메일&lt;/label&gt;
+&lt;input id="email" type="email" autocomplete="email"&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">오류의 위치와 이유를 텍스트로 안내 <span class="tag tag--req">7.3.1</span></span>
+              <span class="check__desc">"입력값을 확인하세요"로는 부족합니다. <b>어떤 항목이 왜</b> 틀렸는지 씁니다.</span>
+              <details><summary>코드</summary>
+<pre>&lt;input id="email" type="email"
+       aria-describedby="email-help email-error"
+       aria-invalid="true"&gt;
+&lt;p id="email-help"&gt;회사 메일을 입력하세요&lt;/p&gt;
+&lt;p id="email-error" role="alert"&gt;올바른 형식이 아닙니다&lt;/p&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">레이블과 네임이 일치 <span class="tag tag--req">6.5.3</span></span>
+              <span class="check__desc">화면 텍스트가 "검색"인데 <code>aria-label="찾기"</code>면 음성명령 사용자가 실행할 수 없습니다. 화면 텍스트가 있으면 <code>aria-label</code>을 붙이지 않는 게 기본입니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">초점 · 선택만으로 기능이 실행되지 않음 <span class="tag tag--req">7.2.1</span></span>
+              <span class="check__desc">셀렉트 선택만으로 페이지 이동 금지, 마지막 칸 입력 시 자동 제출 금지, 예측 못 한 새 창 열림 금지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">인지 기능 테스트에만 의존하지 않는 인증 <span class="tag tag--req">7.3.3</span></span>
+              <span class="check__desc">비밀번호·패턴·이미지 CAPTCHA 외에 대안 하나 이상. 브라우저 자동완성 허용, OAuth, 생체·기기 인증 등.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">반복 입력 정보 자동 · 선택 입력 <span class="tag tag--req">7.3.4</span></span>
+              <span class="check__desc">"주문자 정보와 동일" 체크박스 등. 보안상 재입력이 필요한 비밀번호는 예외입니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">autocomplete 속성 지정 <span class="tag tag--rec">권장</span></span>
+              <details><summary>코드</summary>
+<pre>&lt;input type="email" autocomplete="email"&gt;
+&lt;input type="tel"   autocomplete="tel"&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 06 컴포넌트 ============ -->
+    <section class="section" id="s6" aria-labelledby="s6-title">
+      <div class="section__head">
+        <span class="section__num">06</span>
+        <h2 class="section__title" id="s6-title">컴포넌트</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">모달: 초점 이동 · 복귀 · 트랩 · ESC <span class="tag tag--req">6.1.2</span> <span class="tag tag--warn">까다로움</span></span>
+              <span class="check__desc">열 때 내부로 초점 이동, <b>닫을 때 원래 트리거로 복귀</b>, Tab이 밖으로 나가지 않음, ESC로 닫힘, 배경 스크롤 잠금.</span>
+              <details><summary>코드</summary>
+<pre>&lt;div role="dialog" aria-modal="true"
+     aria-labelledby="modal-title"&gt;
+  &lt;h2 id="modal-title"&gt;알림&lt;/h2&gt;
+  ...
+  &lt;button type="button"&gt;
+    &lt;span class="sr-only"&gt;닫기&lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;
+
+// React라면 Radix UI / React Aria 사용 권장</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">탭: 방향키 이동 + ARIA 속성 <span class="tag tag--req">6.1.1</span></span>
+              <span class="check__desc"><code>role="tablist" / "tab" / "tabpanel"</code>, <code>aria-selected</code>, <code>aria-controls</code>. Tab 키로는 탭 목록 전체를 하나로 취급합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">아코디언: button + aria-expanded <span class="tag tag--req">6.1.1</span></span>
+              <span class="check__desc">닫힌 패널은 <code>hidden</code>으로 처리해 초점이 보이지 않는 요소로 들어가지 않게 합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">드롭다운 GNB: 키보드 초점으로도 열림 <span class="tag tag--req">6.1.1</span></span>
+              <span class="check__desc">hover로만 열리면 키보드 사용자는 하위 메뉴에 도달할 수 없습니다. ESC로 닫히고 초점은 상위 버튼으로 돌아갑니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">자동 롤링 배너에 정지 버튼 <span class="tag tag--req">6.2.2</span></span>
+              <span class="check__desc">이 항목 없이는 통과할 수 없습니다. 화면에 보이지 않는 슬라이드는 초점을 받지 않도록 처리합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">표: 제목 셀과 데이터 셀 구분 <span class="tag tag--req">5.3.1</span></span>
+              <span class="check__desc">레이아웃 목적의 <code>&lt;table&gt;</code>은 사용하지 않습니다.</span>
+              <details><summary>코드</summary>
+<pre>&lt;table&gt;
+  &lt;caption&gt;2026년 분기별 매출&lt;/caption&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th scope="col"&gt;분기&lt;/th&gt;&lt;th scope="col"&gt;매출&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;th scope="row"&gt;1분기&lt;/th&gt;&lt;td&gt;12억&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">토스트 · 상태 메시지에 role <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">일반은 <code>role="status"</code>, 긴급은 <code>role="alert"</code>. 자동으로 사라진다면 충분한 시간 또는 정지 수단이 필요합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">웹 애플리케이션 접근성 준수 <span class="tag tag--req">8.2.1</span></span>
+              <span class="check__desc">직접 만든 커스텀 컨트롤은 명칭 · 역할 · 상태 · 값을 WAI-ARIA로 보조기술에 전달해야 합니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 07 모바일 · 터치 ============ -->
+    <section class="section" id="s7" aria-labelledby="s7-title">
+      <div class="section__head">
+        <span class="section__num">07</span>
+        <h2 class="section__title" id="s7-title">모바일 · 터치 · 동작</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">
+        KWCAG 2.1에서 2.2로 오면서 새로 추가된 항목이 몰려 있는 영역입니다.
+        예전 접근성 지식으로 작업하던 분들이 가장 많이 놓칩니다.
+      </p>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">컨트롤 크기 확보 <span class="tag tag--req">6.1.3</span></span>
+              <span class="check__desc">대각선 6.0mm 이상 (실무상 44×44 CSS px 이상 권장). 이웃한 컨트롤이 같이 눌리지 않을 간격을 둡니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">다중 포인터 · 경로기반 동작의 대안 <span class="tag tag--req">6.5.1</span></span>
+              <span class="check__desc">핀치 줌, 두 손가락 스와이프, 드래그앤드롭으로만 되는 기능이 있다면 버튼 등 단일 포인터 대안을 제공합니다. 스와이프 슬라이더에는 이전/다음 버튼이 필수입니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">포인터 입력 취소 가능 <span class="tag tag--req">6.5.2</span></span>
+              <span class="check__desc"><code>mousedown</code>/<code>touchstart</code>만으로 실행되지 않도록 <code>click</code>을 사용하고, 눌렀다 밖으로 끌어서 떼면 취소되게 합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">동작기반 기능의 대안 + 비활성화 <span class="tag tag--req">6.5.4</span></span>
+              <span class="check__desc">기기를 흔들어 실행하는 기능이 있다면 UI 버튼 대안과 끄기 옵션을 제공합니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 08 애니메이션 ============ -->
+    <section class="section" id="s8" aria-labelledby="s8-title">
+      <div class="section__head">
+        <span class="section__num">08</span>
+        <h2 class="section__title" id="s8-title">애니메이션 · 모션</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">자동으로 움직이는 콘텐츠에 정지 수단 <span class="tag tag--req">6.2.2</span></span>
+              <span class="check__desc">자동 롤링 배너, 스크롤 티커, 자동 갱신 영역. 5초 내 멈추는 애니메이션은 예외입니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">prefers-reduced-motion 대응 <span class="tag tag--rec">권장</span> <span class="tag tag--warn">GSAP 필수</span></span>
+              <span class="check__desc">전정 장애가 있는 사용자에게 큰 시차 스크롤은 어지럼증·구토를 유발합니다. 패럴랙스나 ScrollSmoother를 쓰는 프로젝트에서는 사실상 필수입니다.</span>
+              <details><summary>코드</summary>
+<pre>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// GSAP
+const mm = gsap.matchMedia();
+mm.add('(prefers-reduced-motion: no-preference)', () =&gt; {
+  // 모션은 여기서만 생성
+});</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">ScrollSmoother 사용 시 키보드 탐색 확인 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">스크롤을 가로채므로 Tab 이동 시 초점 요소가 화면 밖에 있을 수 있습니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">시간제한이 있으면 해제 · 연장 수단 <span class="tag tag--req">6.2.1</span></span>
+              <span class="check__desc">로그인 세션 만료 등은 최소 20초 전에 알리고 연장할 수 있어야 합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="req">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">도움 정보가 모든 페이지에서 같은 위치 <span class="tag tag--req">7.2.2</span></span>
+              <span class="check__desc">고객센터 연락처, FAQ, 챗봇 등을 제공한다면 상대적 위치가 일관되어야 합니다. 푸터 고정이 일반적인 해법입니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 09 검수 절차 ============ -->
+    <section class="section" id="s9" aria-labelledby="s9-title">
+      <div class="section__head">
+        <span class="section__num">09</span>
+        <h2 class="section__title" id="s9-title">검수 절차</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">자동 검사 실행 <span class="tag tag--rec">1단계</span></span>
+              <span class="check__desc">axe DevTools · WAVE로 페이지 단위 확인, CI에 pa11y 연동.</span>
+              <details><summary>명령어</summary>
+<pre>npx @axe-core/cli https://example.com --save report.json
+npx pa11y-ci --sitemap https://example.com/sitemap.xml</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">마우스 없이 Tab만으로 전체 조작 <span class="tag tag--rec">2단계</span></span>
+              <span class="check__desc">초점이 항상 보이는지, 순서가 맞는지, 갇히는 곳이 없는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">브라우저 200% 확대 확인 <span class="tag tag--rec">2단계</span></span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">CSS 끄고 읽는 순서 확인 <span class="tag tag--rec">2단계</span></span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">스크린리더로 주요 흐름 확인 <span class="tag tag--rec">3단계</span></span>
+              <span class="check__desc">Windows는 NVDA(무료), Mac은 VoiceOver(내장). 이미지·폼 오류·모달 진입이 제대로 읽히는지.</span>
+              <details><summary>NVDA 기본 조작</summary>
+<pre>Ctrl + Alt + N   실행
+Insert + ↓       연속 읽기
+H                제목 단위 이동
+Tab              다음 컨트롤
+Insert + Q       종료</pre></details>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 부록 A ============ -->
+    <section class="section" id="index" aria-labelledby="index-title">
+      <div class="section__head">
+        <span class="section__num">부록 A</span>
+        <h2 class="section__title" id="index-title">KWCAG 2.2 검사항목 33개</h2>
+      </div>
+      <p class="section__desc">감리·인증 심사 대응용 전수 인덱스입니다.</p>
+
+      <div class="tbl-wrap" style="margin-bottom:var(--space-4)">
+        <table class="tbl">
+          <caption>인식의 용이성 (9)</caption>
+          <thead><tr><th scope="col">번호</th><th scope="col">검사항목</th><th scope="col">섹션</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">5.1.1</th><td>적절한 대체 텍스트 제공</td><td>02</td></tr>
+            <tr><th scope="row">5.2.1</th><td>자막 제공</td><td>02</td></tr>
+            <tr><th scope="row">5.3.1</th><td>표의 구성</td><td>06</td></tr>
+            <tr><th scope="row">5.3.2</th><td>콘텐츠의 선형구조</td><td>01</td></tr>
+            <tr><th scope="row">5.3.3</th><td>명확한 지시사항 제공</td><td>03</td></tr>
+            <tr><th scope="row">5.4.1</th><td>색에 무관한 콘텐츠 인식</td><td>03</td></tr>
+            <tr><th scope="row">5.4.2</th><td>자동 재생 금지</td><td>02</td></tr>
+            <tr><th scope="row">5.4.3</th><td>텍스트 콘텐츠의 명도 대비 (4.5:1)</td><td>03</td></tr>
+            <tr><th scope="row">5.4.4</th><td>콘텐츠 간의 구분</td><td>03</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tbl-wrap" style="margin-bottom:var(--space-4)">
+        <table class="tbl">
+          <caption>운용의 용이성 (15)</caption>
+          <thead><tr><th scope="col">번호</th><th scope="col">검사항목</th><th scope="col">섹션</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">6.1.1</th><td>키보드 사용 보장</td><td>04</td></tr>
+            <tr><th scope="row">6.1.2</th><td>초점 이동과 표시</td><td>04</td></tr>
+            <tr><th scope="row">6.1.3</th><td>조작 가능 (컨트롤 크기)</td><td>07</td></tr>
+            <tr><th scope="row">6.1.4</th><td>문자 단축키</td><td>04</td></tr>
+            <tr><th scope="row">6.2.1</th><td>응답시간 조절</td><td>08</td></tr>
+            <tr><th scope="row">6.2.2</th><td>정지 기능 제공</td><td>08</td></tr>
+            <tr><th scope="row">6.3.1</th><td>깜빡임과 번쩍임 사용 제한</td><td>02</td></tr>
+            <tr><th scope="row">6.4.1</th><td>반복 영역 건너뛰기</td><td>01</td></tr>
+            <tr><th scope="row">6.4.2</th><td>제목 제공</td><td>01</td></tr>
+            <tr><th scope="row">6.4.3</th><td>적절한 링크 텍스트</td><td>부록 B</td></tr>
+            <tr><th scope="row">6.4.4</th><td>고정된 참조 위치 정보</td><td>전자출판 한정</td></tr>
+            <tr><th scope="row">6.5.1</th><td>단일 포인터 입력 지원</td><td>07</td></tr>
+            <tr><th scope="row">6.5.2</th><td>포인터 입력 취소</td><td>07</td></tr>
+            <tr><th scope="row">6.5.3</th><td>레이블과 네임</td><td>05</td></tr>
+            <tr><th scope="row">6.5.4</th><td>동작기반 작동</td><td>07</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tbl-wrap" style="margin-bottom:var(--space-4)">
+        <table class="tbl">
+          <caption>이해의 용이성 (7)</caption>
+          <thead><tr><th scope="col">번호</th><th scope="col">검사항목</th><th scope="col">섹션</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">7.1.1</th><td>기본 언어 표시</td><td>01</td></tr>
+            <tr><th scope="row">7.2.1</th><td>사용자 요구에 따른 실행</td><td>05</td></tr>
+            <tr><th scope="row">7.2.2</th><td>찾기 쉬운 도움 정보</td><td>08</td></tr>
+            <tr><th scope="row">7.3.1</th><td>오류 정정</td><td>05</td></tr>
+            <tr><th scope="row">7.3.2</th><td>레이블 제공</td><td>05</td></tr>
+            <tr><th scope="row">7.3.3</th><td>접근 가능한 인증</td><td>05</td></tr>
+            <tr><th scope="row">7.3.4</th><td>반복 입력 정보</td><td>05</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tbl-wrap">
+        <table class="tbl">
+          <caption>견고성 (2)</caption>
+          <thead><tr><th scope="col">번호</th><th scope="col">검사항목</th><th scope="col">섹션</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">8.1.1</th><td>마크업 오류 방지</td><td>01</td></tr>
+            <tr><th scope="row">8.2.1</th><td>웹 애플리케이션 접근성 준수</td><td>06</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 부록 B ============ -->
+    <section class="section" id="top10" aria-labelledby="top10-title">
+      <div class="section__head">
+        <span class="section__num">부록 B</span>
+        <h2 class="section__title" id="top10-title">자주 틀리는 것 10가지</h2>
+      </div>
+      <p class="section__desc">진단해보면 위반의 대부분이 이 목록 안에서 나옵니다. 새 프로젝트 시작 시 이것만 먼저 확인해도 절반은 예방됩니다.</p>
+
+      <ol class="rank">
+        <li class="rank__item"><span class="rank__text"><code>outline: none</code>만 있고 대체 초점 스타일 없음 <span class="tag tag--req">6.1.2</span></span></li>
+        <li class="rank__item"><span class="rank__text"><code>alt="이미지"</code> 같은 무의미한 대체 텍스트 <span class="tag tag--req">5.1.1</span></span></li>
+        <li class="rank__item"><span class="rank__text">placeholder를 레이블 대신 사용 <span class="tag tag--req">7.3.2</span></span></li>
+        <li class="rank__item"><span class="rank__text"><code>div</code>·<code>span</code>에 클릭 이벤트 <span class="tag tag--req">6.1.1</span></span></li>
+        <li class="rank__item"><span class="rank__text">흰 배경에 <code>#999</code> 회색 텍스트 (명도 대비 미달) <span class="tag tag--req">5.4.3</span></span></li>
+        <li class="rank__item"><span class="rank__text">디자인 때문에 제목 레벨 건너뜀 <span class="tag tag--req">6.4.2</span></span></li>
+        <li class="rank__item"><span class="rank__text">자동 롤링 배너에 정지 버튼 없음 <span class="tag tag--req">6.2.2</span></span></li>
+        <li class="rank__item"><span class="rank__text">모달을 열어도 초점이 뒤에 남아 있음 <span class="tag tag--req">6.1.2</span></span></li>
+        <li class="rank__item"><span class="rank__text">"자세히 보기" · "더보기"가 한 페이지에 20개 <span class="tag tag--req">6.4.3</span></span></li>
+        <li class="rank__item"><span class="rank__text">전 페이지 <code>&lt;title&gt;</code>이 동일 <span class="tag tag--req">6.4.2</span></span></li>
+      </ol>
+
+      <div class="note note--warn">
+        <b>9번 보완 방법.</b> 링크 텍스트만으로 목적지를 알 수 있게 하거나, 최소한 맥락에서 유추 가능해야 합니다.
+        <code>&lt;a href="/notice"&gt;더보기&lt;span class="sr-only"&gt; (공지사항)&lt;/span&gt;&lt;/a&gt;</code>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <dl>
+        <dt>버전</dt><dd>1.0</dd>
+        <dt>기준</dt><dd>KWCAG 2.2 (KS X OT0003:2022)</dd>
+        <dt>참고</dt><dd>WCAG 2.2 AA</dd>
+        <dt>적용 범위</dt><dd>정적 HTML / React / Next.js</dd>
+      </dl>
+      <p style="margin-top:var(--space-4)">
+        체크 상태는 이 창에서만 유지됩니다. 새로고침하면 초기화되므로,
+        점검 결과를 남기려면 브라우저 인쇄 기능으로 PDF 저장하세요.
+      </p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.check__box'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.check'));
+  var fill = document.getElementById('progress-fill');
+  var count = document.getElementById('progress-count');
+  var currentFilter = 'all';
+
+  /* ---------- 진행률 ---------- */
+  function updateProgress() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var total = boxes.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+
+    fill.style.width = pct + '%';
+    count.innerHTML = '<b>' + done + '</b> / ' + total + ' 완료 · ' + pct + '%';
+
+    // 섹션별 진행률
+    document.querySelectorAll('.section').forEach(function (sec) {
+      var slot = sec.querySelector('[data-section-progress]');
+      if (!slot) return;
+      var secBoxes = Array.prototype.slice.call(sec.querySelectorAll('.check__box'));
+      if (!secBoxes.length) return;
+      var secDone = secBoxes.filter(function (b) { return b.checked; }).length;
+      slot.textContent = secDone + ' / ' + secBoxes.length;
+      slot.style.color = (secDone === secBoxes.length)
+        ? 'var(--c-green)' : 'var(--color-text-mute)';
+    });
+  }
+
+  /* ---------- 필터 ---------- */
+  function applyFilter(mode) {
+    currentFilter = mode;
+    items.forEach(function (item) {
+      var box = item.querySelector('.check__box');
+      var kind = item.dataset.kind;
+      var show = true;
+
+      if (mode === 'todo') show = !box.checked;
+      else if (mode === 'req') show = kind === 'req';
+
+      item.classList.toggle('is-hidden', !show);
+    });
+  }
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      updateProgress();
+      if (currentFilter === 'todo') applyFilter('todo');
+    });
+  });
+
+  document.querySelectorAll('.filters__btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filters__btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  /* ---------- 초기화 ---------- */
+  document.getElementById('reset-btn').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    updateProgress();
+    applyFilter(currentFilter);
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>

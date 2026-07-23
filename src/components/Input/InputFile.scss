@@ -1,19 +1,19 @@
-.input--file {
+.ui-input--file {
     position: relative;
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    &-wp{
+    .ui-input--wp {
        position: relative;
        flex: 1;
        .btn {
-        position: absolute;
-        top: 50%;
-        right: 1rem;
-        transform: translateY(-50%);
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
        }
     }
-    .real-input-file {
+    .real-input--file {
         position: absolute;
         top: 0;
         left: 0;

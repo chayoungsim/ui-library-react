@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { routes, getChildRoutes } from '../../routes/router.tsx'
 import useMediaQuery from '../../hooks/useMediaQuery'
+import useTheme from '@/hooks/useTheme'
+import Button from '@/components/Button'
 import './Header.scss'
 
 // src/styles/abstracts/_breakpoints.scss의 'lg'(1024px)와 동일한 기준입니다.
@@ -11,6 +13,7 @@ const Header = () => {
   const navItems = getChildRoutes(routes[0]).filter((route) => route.handle?.title)
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [isOpen, setIsOpen] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <header id="header" className="header">
@@ -19,11 +22,17 @@ const Header = () => {
           // pc
           <nav>
             <ul className="nav-list">
-              {navItems.map((route) => (
-                <li key={route.path ?? route.handle?.title}>
-                  <Link to={route.path ?? '/'}>{route.handle?.title}</Link>
-                </li>
-              ))}
+              {navItems.map((route) => {
+                const path = route.path ?? '/'
+
+                return (
+                  <li key={path ?? route.handle?.title}>
+                    <NavLink to={path} end={path === '/'}>
+                      {route.handle?.title}
+                    </NavLink>
+                  </li>
+                )
+              })}
             </ul>
           </nav>
         ) : (
@@ -67,6 +76,11 @@ const Header = () => {
             </div>
           </>
         )}
+        <div>
+          <Button variant="outline" onClick={toggleTheme} size="sm">
+            {theme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+          </Button>
+        </div>
       </div>
     </header>
   )

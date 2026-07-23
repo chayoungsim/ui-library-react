@@ -25,8 +25,8 @@ const InputFile = () => {
   }
 
   return (
-    <div className="input--file">
-        <div className="input--file-wp">
+    <div className="ui-input--file">
+        <div className="ui-input--wp">
           <Input type="text" title="첨부파일" placeholder="파일을 선택하세요" value={fileName} readOnly />
           {fileName && (
             <Button iconOnly variant="text" size="sm" aria-label="첨부파일삭제" onClick={handleRemoveClick}>
@@ -38,7 +38,7 @@ const InputFile = () => {
         <Input
           ref={fileInputRef}
           type="file"
-          className="real-input-file"
+          className="real-input--file"
           onChange={handleFileChange}
         />
     </div>

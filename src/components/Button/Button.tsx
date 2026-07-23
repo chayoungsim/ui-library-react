@@ -23,10 +23,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
 
   // 클래스 이름을 동적으로 조합합니다.
   const buttonClasses = [
-    'btn',
-    `btn--${variant}`,
-    `btn--${size}`,
-    iconOnly ? 'btn--icon' : '',
+    'ui-button',
+    `ui-button--${variant}`,
+    `ui-button--${size}`,
+    iconOnly ? 'ui-button--icon' : '',
     loading ? 'is-loading' : '',
     className || '',
   ]
@@ -43,16 +43,16 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       {...props}
     >
       {loading ? (
-        <span className="btn__loader" aria-label="로딩 중">
+        <span className="ui-button__loader" aria-label="로딩 중">
           <Spinner />
         </span>
       ) : iconOnly ? (
-        <span className="btn__icon">{children}</span>
+        <span className="ui-button__icon">{children}</span>
       ) : (
         <>
-          {startIcon && <span className="btn__icon btn__icon--start">{startIcon}</span>}
-          <span className="btn__text">{children}</span>
-          {endIcon && <span className="btn__icon btn__icon--end">{endIcon}</span>}
+          {startIcon && <span className="ui-button__icon ui-button__icon--start">{startIcon}</span>}
+          <span className="ui-button__text">{children}</span>
+          {endIcon && <span className="ui-button__icon ui-button__icon--end">{endIcon}</span>}
         </>
       )}
     </button>

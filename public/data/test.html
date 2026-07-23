@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>페이지명 | 브랜드명</title>
+  <!-- SCSS 컴파일된 CSS 경로 -->
+  <!-- <link rel="stylesheet" href="/src/css/style.css"> -->
+</head>
+<body>
+  <p id="accessibility"><a href="#container">본문바로가기</a></p>
+  <div id="wrap">
+    <!-- 헤더 영역 -->
+    <div data-include="/src/html/inc/header.html"></div>
+
+    <main id="container">
+      <!-- 페이지 콘텐츠 -->
+
+      <button type="button" class="ui-button ui-button--primary ui-button--md" data-modal-target="modal-1">
+        <span class="ui-button__text">모달 열기</span>
+      </button>
+
+      <div class="ui-modal__backdrop" id="modal-1" data-modal hidden>
+        <div class="ui-modal ui-modal--sm" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+          <div class="ui-modal__head">
+            <h2 id="modal-1-title" class="ui-modal__title">모달 제목</h2>
+            <button type="button" class="ui-button ui-button--text ui-button--sm ui-button--icon" aria-label="닫기" data-modal-close>
+              <span class="ui-button__icon"><i class="icon icon--x"></i></span>
+            </button>
+          </div>
+          <div class="ui-modal__body">
+            모달 내용을 입력하세요
+          </div>
+          <div class="ui-modal__foot">
+            <button type="button" class="ui-button ui-button--outline ui-button--md" data-modal-close>
+              <span class="ui-button__text">취소</span>
+            </button>
+            <button type="button" class="ui-button ui-button--primary ui-button--md" >
+              <span class="ui-button__text">저장하기</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+
+    </main>
+
+    <!-- 푸터 영역 -->
+    <div data-include="/src/html/inc/footer.html"></div>
+  </div>
+
+  <!-- 공통 자바스크립트 -->
+  <script src="/src/js/utils/include.js"></script>
+  <script src="/src/js/common.js"></script>
+  <script>
+    
+    (function () {
+      var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+      var activeModal = null;
+      var lastFocused = null;
+    
+      function openModal(id) {
+        var backdrop = document.getElementById(id);
+        if (!backdrop) return;
+    
+        activeModal = backdrop;
+        lastFocused = document.activeElement;
+        backdrop.hidden = false;
+        document.body.style.overflow = 'hidden';
+    
+        var first = backdrop.querySelector(FOCUSABLE);
+        if (first) first.focus();
+    
+        document.addEventListener('keydown', onKeydown);
+      }
+    
+      function closeModal() {
+        if (!activeModal) return;
+    
+        activeModal.hidden = true;
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKeydown);
+    
+        if (lastFocused) lastFocused.focus();
+        activeModal = null;
+      }
+    
+      function onKeydown(e) {
+        if (!activeModal) return;
+    
+        if (e.key === 'Escape') {
+          closeModal();
+          return;
+        }
+    
+        if (e.key !== 'Tab') return;
+    
+        var items = Array.prototype.slice.call(activeModal.querySelectorAll(FOCUSABLE));
+        if (items.length === 0) return;
+    
+        var first = items[0];
+        var last = items[items.length - 1];
+    
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    
+      document.querySelectorAll('[data-modal-target]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          openModal(trigger.getAttribute('data-modal-target'));
+        });
+      });
+    
+      document.querySelectorAll('[data-modal-close]').forEach(function (btn) {
+        btn.addEventListener('click', closeModal);
+      });
+    
+      document.querySelectorAll('[data-modal]').forEach(function (backdrop) {
+        backdrop.addEventListener('click', function (e) {
+          if (e.target === backdrop) closeModal();
+        });
+      });
+    })();
+    
+
+  </script>
+</body>
+</html>

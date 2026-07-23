@@ -7,7 +7,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   ref,
 ) {
   // 클래스 이름을 동적으로 조합합니다.
-  const inputClasses = ['input', `input--${size}`, error ? 'is-error' : '', className || '']
+  const inputClasses = ['ui-input', `ui-input--${size}`, error ? 'is-error' : '', className || '']
     .join(' ')
     .trim()
 

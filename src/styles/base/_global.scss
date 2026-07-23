@@ -10,6 +10,8 @@
 
 :root {
   --header-height: 6.4rem;
+  --focus-ring: 2px solid var(--color-primary);
+  --focus-offset: 2px;
 }
 html {
   // Set base font-size to 62.5% to make 1rem = 10px for easier calculations.
@@ -53,4 +55,10 @@ a {
 
 .flex-center {
     @include flex-c;
+}
+
+/* 초점 표시 */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
 }

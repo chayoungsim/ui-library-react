@@ -1,39 +1,43 @@
 @use 'sass:color';
 @use '@/styles/abstracts/variables' as *;
 
-/**
- * Color System
- *
- * This file generates CSS Custom Properties (CSS Variables) for the color palette.
- * This allows colors to be used consistently across SCSS, CSS, and JavaScript,
- * and enables dynamic theming.
- */
+/* Color System */
 
 // Default theme (Light Mode)
 :root {
+  //
+  --color-sk-red: #{$color-sk-red};
+  --color-sk-blue: #{$color-sk-blue};
+  --color-sk-teal: #{$color-sk-teal};
+  --color-sk-navy: #{$color-sk-navy};
+
+
   // Theme Colors
   --color-primary: #{$color-primary};
   --color-primary-hover: #{color.adjust($color-primary, $lightness: -10%)};
   --color-background: #{$color-background};
-  --color-text: #{$color-gray-800};
+  --color-text: #{$color-text};
+  --color-text-mute: #{$color-text-mute};
   --color-link: #{$color-link};
   --color-border: #{$color-border};
   --color-error: #{$color-error};
 
   // Grayscale Palette
-  --color-gray-100: #{$color-gray-100}; // #f8f9fa
-  --color-gray-200: #{$color-gray-200}; // #e9ecef
-  --color-gray-300: #{$color-gray-300}; // #dee2e6
-  --color-gray-400: #{$color-gray-400}; // #ced4da
-  --color-gray-500: #{$color-gray-500}; // #adb5bd
-  --color-gray-600: #{$color-gray-600}; // #6c757d
-  --color-gray-700: #{$color-gray-700}; // #495057
-  --color-gray-800: #{$color-gray-800}; // #343a40
-  --color-gray-900: #{$color-gray-900}; // #212529
+  --color-gray-100: #{$color-gray-100}; 
+  --color-gray-200: #{$color-gray-200}; 
+  --color-gray-300: #{$color-gray-300};
+  --color-gray-400: #{$color-gray-400}; 
+  --color-gray-500: #{$color-gray-500}; 
+  --color-gray-600: #{$color-gray-600}; 
+  --color-gray-700: #{$color-gray-700}; 
+  --color-gray-800: #{$color-gray-800}; 
+  --color-gray-900: #{$color-gray-900}; 
 
   // Base Colors
   --color-white: #{$color-white};
   --color-black: #{$color-black};
+
+
 }
 
 // Dark Mode: Applied when the user's OS is in dark mode OR when `data-theme="dark"` is set on the html element.

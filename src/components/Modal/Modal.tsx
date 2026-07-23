@@ -27,10 +27,10 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
   if (!isOpen) return null
 
   // 클래스 이름을 동적으로 조합합니다.
-  const modalClasses = ['modal', `modal--${size}`, className || ''].join(' ').trim()
+  const modalClasses = ['ui-modal', `ui-modal--${size}`, className || ''].join(' ').trim()
 
   return createPortal(
-    <div className="modal__backdrop" onClick={closeOnBackdropClick ? onClose : undefined}>
+    <div className="ui-modal__backdrop" onClick={closeOnBackdropClick ? onClose : undefined}>
       <div
         ref={ref}
         className={modalClasses}
@@ -41,9 +41,9 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
         {...props}
       >
         {(title || showCloseButton) && (
-          <div className="modal__header">
+          <div className="ui-modal__head">
             {title && (
-              <h2 id="modal-title" className="modal__title">
+              <h2 id="modal-title" className="ui-modal__title">
                 {title}
               </h2>
             )}
@@ -54,7 +54,11 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
             )}
           </div>
         )}
-        <div className="modal__body">{children}</div>
+        <div className="ui-modal__body">{children}</div>
+        <div className='ui-modal__foot'>
+          <Button variant = 'outline' onClick={closeOnBackdropClick ? onClose : undefined}>취소</Button>
+          <Button>저장하기</Button>
+        </div>
       </div>
     </div>,
     document.body,

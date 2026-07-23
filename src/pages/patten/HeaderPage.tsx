@@ -6,7 +6,7 @@ import Box from '@/components/Box/Box'
 const HeaderPage = () => {
   return (
     <div style={{height: "300vh"}}>
-        <h2>Layout</h2>
+        <h2>Patten</h2>
         <div className="sect">
             <h3>Header</h3>
             <Box style={{position:"relative"}}>

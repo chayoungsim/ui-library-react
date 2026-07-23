@@ -38,7 +38,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
   }
 
   // 클래스 이름을 동적으로 조합합니다.
-  const tabsClasses = ['tabs', `tabs--${variant}`, `tabs--${size}`, className || ''].join(' ').trim()
+  const tabsClasses = ['ui-tabs', `ui-tabs--${variant}`, `ui-tabs--${size}`, className || ''].join(' ').trim()
 
   const activeItem = items.find((item) => item.id === activeId)
 
@@ -46,7 +46,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
     <div ref={ref} className={tabsClasses} {...props}>
       {variant === 'responsive' && (
         <Select
-          className="tabs__mobile-select"
+          className="ui-tabs__mobile-select"
           aria-label="탭 선택"
           value={activeId}
           onChange={handleMobileSelectChange}
@@ -58,7 +58,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
           ))}
         </Select>
       )}
-      <div className="tabs__list" role="tablist" onKeyDown={handleKeyDown}>
+      <div className="ui-tabs__list" role="tablist" onKeyDown={handleKeyDown} aria-label="문서 종류">
         {items.map((item) => {
           const isActive = item.id === activeId
 
@@ -68,7 +68,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
               type="button"
               id={`${baseId}-tab-${item.id}`}
               role="tab"
-              className={`tabs__tab ${isActive ? 'is-active' : ''}`.trim()}
+              className={`ui-tabs__tab ${isActive ? 'is-active' : ''}`.trim()}
               aria-selected={isActive}
               aria-controls={`${baseId}-panel-${item.id}`}
               disabled={item.disabled}
@@ -85,7 +85,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
           id={`${baseId}-panel-${activeItem.id}`}
           role="tabpanel"
           aria-labelledby={`${baseId}-tab-${activeItem.id}`}
-          className="tabs__panel"
+          className="ui-tabs__panel"
         >
           {activeItem.content}
         </div>

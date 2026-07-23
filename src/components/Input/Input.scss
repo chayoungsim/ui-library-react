@@ -2,11 +2,12 @@
 @use '@/styles/abstracts/mixins' as *;
 @use '@/styles/abstracts/variables' as *;
 
+
 /* ==========================================================================
    Input Component
    ========================================================================== */
 
-.input {
+.ui-input {
   // --- 기본 구조 및 레이아웃 ---
   display: block;
   width: 100%;
@@ -73,10 +74,23 @@
   }
 }
 
+.ui-help {
+    font-size:1.3rem;
+    color:var(--color-text-mute);
+    margin-top: 0.5rem;
+}
+.ui-error {
+    font-size:1.3rem;
+    color:var(--color-error);
+    font-weight:500;
+    margin-top: 0.5rem;
+}
+
+
 
 .input-lists {
-  h3{
-    font-size:1.4rem;
-    margin-top: 2rem;
-  }
+    h3{
+      font-size:1.4rem;
+      margin-top: 2rem;
+    }
 }

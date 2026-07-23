@@ -21,10 +21,12 @@ const InputPage = () => {
         <li>
           <h3>number</h3>
           <Input type="number" placeholder="숫자를 입력하세요" />
+          <p className="ui-error" role="alert">번호 11자리를 모두 입력하세요</p>
         </li>
         <li>
           <h3>tel</h3>
           <Input type="tel" placeholder="전화번호를 입력하세요" />
+          <p className="ui-help">하이픈 없이 입력하세요</p>
         </li>
         <li>
           <h3>search</h3>

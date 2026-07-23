@@ -12,6 +12,7 @@ const ButtonType = () => {
                 <Button variant="primary">Primary</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="outline">Outlined</Button>
+                <Button variant="textLine">Text Line</Button>
                 <Button variant="text">Text</Button>
             </Box> 
 
@@ -25,8 +26,8 @@ const ButtonType = () => {
         
             <h3>With Icon</h3>
             <Box className="flex-center">
-                <Button startIcon={<span>Start</span>}>Start Icon</Button>
-                <Button endIcon={<span>End</span>}>End Icon</Button>
+                <Button variant="secondary" startIcon={<Icon text="다운로드" className="icon--download" />}>Start Icon</Button>
+                <Button variant="secondary" endIcon={<Icon text="다운로드" className="icon--download" />}>End Icon</Button>
             </Box>
 
             <h3>Icon Only</h3>

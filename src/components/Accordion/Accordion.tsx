@@ -32,7 +32,7 @@ const Accordion = forwardRef<HTMLDivElement, AccordionProps>(function Accordion(
   }
 
   // 클래스 이름을 동적으로 조합합니다.
-  const accordionClasses = ['accordion', `accordion--${variant}`, className || ''].join(' ').trim()
+  const accordionClasses = ['ui-accordion', `ui-accordion--${variant}`, className || ''].join(' ').trim()
 
   return (
     <div ref={ref} className={accordionClasses} {...props}>
@@ -42,24 +42,24 @@ const Accordion = forwardRef<HTMLDivElement, AccordionProps>(function Accordion(
         const panelId = `accordion-panel-${item.id}`
 
         return (
-          <div key={item.id} className={`accordion__item ${isOpen ? 'is-open' : ''}`.trim()}>
-            <div className="accordion__heading">
+          <div key={item.id} className={`ui-accordion__item ${isOpen ? 'is-open' : ''}`.trim()}>
+            <div className="ui-accordion__heading">
               <button
                 type="button"
                 id={headerId}
-                className="accordion__trigger"
+                className="ui-accordion__trigger"
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 disabled={item.disabled}
                 onClick={() => toggle(item.id)}
               >
-                <span className="accordion__title">{item.title}</span>
-                <Icon text="" className="accordion__icon icon--arr-right" />
+                <span className="ui-accordion__title">{item.title}</span>
+                <Icon text="" className="ui-accordion__icon icon--arr-right" />
               </button>
             </div>
-            <div id={panelId} role="region" aria-labelledby={headerId} className="accordion__panel">
-              <div className="accordion__content">
-                <div className="accordion__content-inner">{item.content}</div>
+            <div id={panelId} role="region" aria-labelledby={headerId} className="ui-accordion__panel">
+              <div className="ui-accordion__content">
+                <div className="ui-accordion__content-inner">{item.content}</div>
               </div>
             </div>
           </div>

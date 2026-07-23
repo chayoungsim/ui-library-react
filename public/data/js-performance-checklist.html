@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JS 최적화 체크리스트 | Core Web Vitals 점검</title>
+<meta name="description" content="INP·LCP 중심 프론트엔드 자바스크립트 성능 최적화 체크리스트">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS — 문서 세트 공통 체계
+   ============================================================ */
+:root{
+  --c-paper:#FAFAF8; --c-surface:#FFFFFF;
+  --c-ink:#14161A; --c-ink-2:#5A6069; --c-ink-3:#8B909A;
+  --c-rule:#E3E3DD; --c-rule-strong:#C9C9C1;
+  --c-blue:#1B3FD1; --c-blue-wash:#EEF1FE;
+  --c-green:#0F7B54; --c-green-wash:#E9F5EF;
+  --c-red:#B21E4B;   --c-red-wash:#FCEDF1;
+  --c-amber:#8A5A00; --c-amber-wash:#FBF3E2;
+
+  --color-bg:var(--c-paper);
+  --color-surface:var(--c-surface);
+  --color-text-strong:var(--c-ink);
+  --color-text:var(--c-ink-2);
+  --color-text-mute:var(--c-ink-3);
+  --color-border:var(--c-rule);
+  --color-border-strong:var(--c-rule-strong);
+  --color-primary:var(--c-blue);
+  --color-primary-wash:var(--c-blue-wash);
+
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.5rem; --space-6:2rem;  --space-8:3rem;   --space-10:4rem;
+
+  --radius-sm:3px; --radius-md:6px; --radius-lg:10px; --radius-full:999px;
+  --shadow-sm:0 1px 2px rgba(20,22,26,.06);
+  --z-header:300;
+
+  --font-body:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  --focus-ring:2px solid var(--color-primary);
+  --focus-offset:2px;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-body);font-size:1rem;line-height:1.7;letter-spacing:-.01em;
+}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:var(--color-primary)}
+code,kbd{font-family:var(--font-mono);font-size:.85em}
+:focus-visible{outline:var(--focus-ring);outline-offset:var(--focus-offset);border-radius:2px}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.skip-nav{
+  position:absolute;left:var(--space-4);top:-200%;z-index:999;
+  padding:var(--space-3) var(--space-5);background:var(--color-text-strong);color:#fff;
+  font-weight:600;text-decoration:none;border-radius:0 0 var(--radius-md) var(--radius-md);
+}
+.skip-nav:focus{top:0}
+.wrap{max-width:62rem;margin:0 auto;padding:0 var(--space-5)}
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead{padding:var(--space-10) 0 var(--space-6)}
+.masthead__eyebrow{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-4);
+}
+.masthead__title{
+  font-size:clamp(1.9rem,4.6vw,3rem);line-height:1.15;letter-spacing:-.035em;
+  font-weight:800;color:var(--color-text-strong);
+}
+.masthead__lead{margin-top:var(--space-4);max-width:44rem}
+
+/* Core Web Vitals 게이지 — 시그니처 */
+.vitals{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));
+  gap:var(--space-3);margin-top:var(--space-6);
+}
+.vital{
+  border:1px solid var(--color-border);border-radius:var(--radius-md);
+  background:var(--color-surface);padding:var(--space-4);
+}
+.vital__key{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;
+  color:var(--color-text-mute);text-transform:uppercase;
+}
+.vital__name{font-size:.82rem;color:var(--color-text);margin-top:.1rem}
+.vital__val{
+  font-family:var(--font-mono);font-size:1.7rem;font-weight:700;
+  color:var(--color-text-strong);margin-top:var(--space-2);line-height:1.1;
+}
+.vital__val small{font-size:.9rem;color:var(--color-text-mute);font-weight:500}
+.vital__scale{
+  display:flex;height:.4rem;border-radius:var(--radius-full);overflow:hidden;
+  margin-top:var(--space-3);gap:2px;
+}
+.vital__seg{flex:1;border-radius:var(--radius-full)}
+.vital__seg--good{background:var(--c-green)}
+.vital__seg--mid{background:var(--c-amber)}
+.vital__seg--bad{background:var(--c-red)}
+
+/* ============================================================
+   진행률 트래커
+   ============================================================ */
+.tracker{
+  position:sticky;top:0;z-index:var(--z-header);
+  background:rgba(250,250,248,.94);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--color-border);
+}
+.tracker__inner{
+  max-width:62rem;margin:0 auto;padding:var(--space-3) var(--space-5);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);
+}
+.tracker__meter{flex:1 1 12rem;min-width:10rem}
+.tracker__bar{height:.55rem;background:var(--color-border);border-radius:var(--radius-full);overflow:hidden}
+.tracker__fill{display:block;height:100%;width:0%;background:var(--color-primary);border-radius:var(--radius-full);transition:width .25s ease}
+.tracker__count{font-family:var(--font-mono);font-size:.75rem;color:var(--color-text-mute);margin-top:var(--space-1);display:block}
+.tracker__count b{color:var(--color-text-strong);font-weight:700}
+
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-1)}
+.filters__btn{
+  appearance:none;border:1px solid var(--color-border-strong);background:var(--color-surface);
+  color:var(--color-text);padding:.35rem .8rem;border-radius:var(--radius-full);
+  font-family:inherit;font-size:.78rem;font-weight:500;cursor:pointer;
+  transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+}
+.filters__btn:hover{border-color:var(--color-text-mute)}
+.filters__btn[aria-pressed="true"]{background:var(--color-text-strong);border-color:var(--color-text-strong);color:#fff}
+.filters__reset{
+  appearance:none;border:0;background:transparent;color:var(--color-text-mute);
+  font-family:inherit;font-size:.78rem;cursor:pointer;text-decoration:underline;
+  padding:.35rem .5rem;border-radius:var(--radius-sm);
+}
+.filters__reset:hover{color:var(--c-red)}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{padding:var(--space-8) 0;border-top:1px solid var(--color-border)}
+.section__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--space-3);margin-bottom:var(--space-2)}
+.section__num{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.1em;color:var(--color-primary)}
+.section__title{font-size:1.4rem;letter-spacing:-.025em;font-weight:700;color:var(--color-text-strong)}
+.section__metric{
+  font-family:var(--font-mono);font-size:.66rem;padding:.15em .6em;border-radius:var(--radius-full);
+  border:1px solid var(--color-primary);color:var(--color-primary);background:var(--color-primary-wash);
+}
+.section__progress{margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--color-text-mute);white-space:nowrap}
+.section__desc{margin-bottom:var(--space-5);max-width:46rem;font-size:.93rem}
+
+/* ============================================================
+   CHECK ITEM
+   ============================================================ */
+.checks{border:1px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-surface);overflow:hidden}
+.check{border-bottom:1px solid var(--color-border)}
+.check:last-child{border-bottom:0}
+.check.is-hidden{display:none}
+.check__main{display:flex;align-items:flex-start;gap:var(--space-3);padding:var(--space-4);cursor:pointer}
+.check__main:hover{background:var(--c-paper)}
+.check__box{flex:none;width:1.2rem;height:1.2rem;margin:.3rem 0 0;accent-color:var(--color-primary);cursor:pointer}
+.check__body{flex:1;min-width:0}
+.check__title{font-size:.95rem;font-weight:600;color:var(--color-text-strong);display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
+.check__desc{margin-top:var(--space-1);font-size:.87rem;color:var(--color-text)}
+.check__desc code{background:var(--c-paper);padding:.1em .4em;border-radius:var(--radius-sm);color:var(--color-text-strong)}
+.check input:checked ~ .check__body .check__title{color:var(--color-text-mute);text-decoration:line-through;text-decoration-thickness:1px}
+.check input:checked ~ .check__body .check__desc{color:var(--color-text-mute)}
+
+.tag{display:inline-block;padding:.1em .55em;border-radius:var(--radius-full);font-family:var(--font-mono);font-size:.66rem;font-weight:500;border:1px solid currentColor;white-space:nowrap}
+.tag--must{color:var(--c-red);background:var(--c-red-wash)}
+.tag--rec{color:var(--color-primary);background:var(--color-primary-wash)}
+.tag--case{color:var(--color-text-mute);background:var(--c-paper)}
+.tag--metric{color:var(--c-green);background:var(--c-green-wash)}
+
+.check details{margin:var(--space-3) 0 0}
+.check summary{display:inline-flex;align-items:center;gap:var(--space-2);font-family:var(--font-mono);font-size:.72rem;color:var(--color-primary);cursor:pointer;padding:.2rem .1rem;border-radius:var(--radius-sm);list-style:none}
+.check summary::-webkit-details-marker{display:none}
+.check summary::before{content:"▸";transition:transform .15s ease;display:inline-block}
+.check details[open] summary::before{transform:rotate(90deg)}
+.check pre{margin:var(--space-2) 0 0;padding:var(--space-3) var(--space-4);background:#12141A;color:#D9DEE8;border-radius:var(--radius-md);font-family:var(--font-mono);font-size:.75rem;line-height:1.75;overflow-x:auto;tab-size:2}
+.check pre .c{color:#6B7280}
+.check pre .g{color:#7BE0AE}
+.check pre .r{color:#F4A8B8}
+
+/* ============================================================
+   NOTE
+   ============================================================ */
+.note{border-left:3px solid var(--color-primary);background:var(--color-primary-wash);padding:var(--space-4) var(--space-5);border-radius:0 var(--radius-md) var(--radius-md) 0;margin:var(--space-5) 0;font-size:.89rem;color:var(--color-text-strong)}
+.note--warn{border-color:var(--c-amber);background:var(--c-amber-wash)}
+.note code{background:rgba(255,255,255,.7);padding:.1em .4em;border-radius:var(--radius-sm)}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--color-border);border-radius:var(--radius-md)}
+.tbl{width:100%;border-collapse:collapse;background:var(--color-surface);font-size:.86rem}
+.tbl caption{padding:var(--space-3) var(--space-4);text-align:left;font-weight:600;color:var(--color-text-strong);border-bottom:1px solid var(--color-border)}
+.tbl th,.tbl td{padding:var(--space-2) var(--space-4);text-align:left;border-bottom:1px solid var(--color-border)}
+.tbl thead th{background:var(--c-paper);font-family:var(--font-mono);font-size:.7rem;letter-spacing:.04em;color:var(--color-text-mute);font-weight:500}
+.tbl tbody th{font-weight:500;color:var(--color-text-strong)}
+.tbl tbody tr:last-child th,.tbl tbody tr:last-child td{border-bottom:0}
+.tbl code{background:var(--c-paper);padding:.1em .4em;border-radius:var(--radius-sm);color:var(--color-text-strong)}
+
+/* ============================================================
+   판단 기준 카드
+   ============================================================ */
+.decision{display:grid;gap:var(--space-3);grid-template-columns:1fr;margin-top:var(--space-4)}
+@media (min-width:720px){.decision{grid-template-columns:1fr 1fr}}
+.decision__card{border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);padding:var(--space-4);display:flex;gap:var(--space-3);align-items:flex-start}
+.decision__when{font-family:var(--font-mono);font-size:.72rem;color:var(--c-red);flex:none;width:8rem;font-weight:700}
+.decision__do{font-size:.87rem;color:var(--color-text-strong)}
+
+.foot{padding:var(--space-8) 0 var(--space-10);font-size:.82rem;color:var(--color-text-mute);border-top:1px solid var(--color-border)}
+.foot dl{display:flex;flex-wrap:wrap;gap:var(--space-5);font-family:var(--font-mono);font-size:.73rem}
+.foot dt{color:var(--color-text-mute)}
+.foot dd{margin:0;color:var(--color-text-strong)}
+
+@media print{
+  .tracker,.skip-nav,.filters,.check summary,.check pre{display:none !important}
+  body{background:#fff;font-size:10pt}
+  .section{break-inside:avoid;padding:1rem 0}
+  .checks,.check{break-inside:avoid}
+  .note{background:#fff;border:1px solid #999}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-nav">본문 바로가기</a>
+
+<div class="tracker">
+  <div class="tracker__inner">
+    <div class="tracker__meter">
+      <div class="tracker__bar"><span class="tracker__fill" id="progress-fill"></span></div>
+      <span class="tracker__count" id="progress-count" role="status"><b>0</b> / 0 완료</span>
+    </div>
+    <div class="filters" role="group" aria-label="항목 필터">
+      <button type="button" class="filters__btn" data-filter="all" aria-pressed="true">전체</button>
+      <button type="button" class="filters__btn" data-filter="todo" aria-pressed="false">미완료만</button>
+      <button type="button" class="filters__btn" data-filter="must" aria-pressed="false">필수만</button>
+    </div>
+    <button type="button" class="filters__reset" id="reset-btn">전체 해제</button>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="wrap">
+
+    <header class="masthead">
+      <p class="masthead__eyebrow">프론트엔드 성능 · Core Web Vitals</p>
+      <h1 class="masthead__title">Lighthouse 100점은<br>성적표가 아닙니다</h1>
+      <p class="masthead__lead">
+        Core Web Vitals는 실사용자 필드 데이터(CrUX, 75 퍼센타일, 28일)로 평가됩니다.
+        개발자 도구에서 만점이 나와도 3G 환경의 실사용자가 느리면 의미가 없습니다.
+        이 체크리스트는 측정으로 시작해 필드 지표를 움직이는 순서로 정리한 것입니다.
+      </p>
+
+      <div class="vitals">
+        <div class="vital">
+          <span class="vital__key">LCP</span>
+          <span class="vital__name">로딩 — 가장 큰 요소 표시</span>
+          <span class="vital__val">2.5<small>s 이하</small></span>
+          <span class="vital__scale"><span class="vital__seg vital__seg--good"></span><span class="vital__seg vital__seg--mid"></span><span class="vital__seg vital__seg--bad"></span></span>
+        </div>
+        <div class="vital">
+          <span class="vital__key">INP</span>
+          <span class="vital__name">반응성 — 상호작용 후 페인트</span>
+          <span class="vital__val">200<small>ms 이하</small></span>
+          <span class="vital__scale"><span class="vital__seg vital__seg--good"></span><span class="vital__seg vital__seg--mid"></span><span class="vital__seg vital__seg--bad"></span></span>
+        </div>
+        <div class="vital">
+          <span class="vital__key">CLS</span>
+          <span class="vital__name">시각 안정성 — 레이아웃 이동</span>
+          <span class="vital__val">0.1<small> 이하</small></span>
+          <span class="vital__scale"><span class="vital__seg vital__seg--good"></span><span class="vital__seg vital__seg--mid"></span><span class="vital__seg vital__seg--bad"></span></span>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>INP가 2026년 기준 가장 많은 사이트가 실패하는 지표</b>이자 가장 깊은 코드 변경을 요구합니다.
+        반대로 이미지·폰트는 노력 대비 효과가 가장 좋습니다.
+        이 문서는 JS에 집중하며, CLS는 대부분 JS가 아니라 이미지 크기·폰트 메트릭 문제이므로 별도 문서를 참고하세요.
+      </div>
+    </header>
+
+    <!-- ============ 00 측정 ============ -->
+    <section class="section" id="s0" aria-labelledby="s0-title">
+      <div class="section__head">
+        <span class="section__num">00</span>
+        <h2 class="section__title" id="s0-title">측정 — 추측하지 말 것</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">최적화 전에 현재 상태를 숫자로 남깁니다. Before/After가 없으면 작업이 아니라 취미입니다. 이 섹션은 모든 프로젝트에서 먼저 합니다.</p>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">번들 분석 리포트 확보 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">상위 5개 모듈이 무엇인지, 예상과 다른 게 1등은 아닌지 확인합니다.</span>
+              <details><summary>명령어</summary>
+<pre><span class="c"># Next.js</span>
+ANALYZE=true npm run build
+
+<span class="c"># Vite</span>
+npx vite-bundle-visualizer</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Performance 패널로 긴 태스크 확인 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">DevTools → Performance → CPU 4x slowdown + Fast 3G. <b>50ms 넘는 태스크</b>에 빨간 삼각형이 표시됩니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">INP 실측 <span class="tag tag--must">필수</span> <span class="tag tag--metric">INP</span></span>
+              <span class="check__desc">실제로 클릭·탭·입력해보며 측정. 인터랙션 후 다음 페인트까지 200ms 이내인지 확인합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Coverage 패널로 미사용 JS 비율 확인 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">DevTools → 더보기 → Coverage → 새로고침. 미사용 50% 이상이면 코드 스플리팅 대상입니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">필드 데이터 확인 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">PageSpeed Insights, Search Console. 랩 데이터와 크게 다르면 저사양 기기·느린 망에 문제가 있는 것입니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 01 번들 크기 ============ -->
+    <section class="section" id="s1" aria-labelledby="s1-title">
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title" id="s1-title">번들 크기 — 의존성 정리</h2>
+        <span class="section__metric">LCP</span>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">라이브러리 전체 import 금지 <span class="tag tag--must">필수</span></span>
+              <details><summary>코드</summary>
+<pre><span class="r">// ❌ lodash 전체 (~70KB)</span>
+import _ from 'lodash';
+<span class="g">// ✅ 필요한 것만</span>
+import debounce from 'lodash-es/debounce';</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">무거운 레거시 의존성 교체 검토 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">moment.js(300KB+) → date-fns·dayjs·Temporal · jQuery → 순수 DOM · 전체 아이콘 팩 → 개별 SVG</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">번들 크기 검사 자동화 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc"><code>size-limit</code> 또는 CI 번들 예산으로 회귀 차단. PR에서 번들이 커지면 경고가 뜨는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">중복 의존성 확인 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc"><code>npm ls &lt;패키지명&gt;</code> — 같은 라이브러리가 버전 다르게 두 번 들어있는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="case">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">polyfill 과잉 여부 <span class="tag tag--case">상황</span></span>
+              <span class="check__desc"><code>browserslist</code>가 필요 이상으로 넓지 않은지. IE 대응이 없는데 core-js가 통째로 들어있지 않은지.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 02 로딩 전략 ============ -->
+    <section class="section" id="s2" aria-labelledby="s2-title">
+      <div class="section__head">
+        <span class="section__num">02</span>
+        <h2 class="section__title" id="s2-title">로딩 전략 — 코드 스플리팅</h2>
+        <span class="section__metric">LCP</span>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">첫 화면에 없는 컴포넌트는 동적 import <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">모달, 탭 하위 콘텐츠, 아코디언 내부, 차트, 에디터, 지도.</span>
+              <details><summary>코드</summary>
+<pre>const Modal = dynamic(() =&gt; import('@/components/Modal'), {
+  ssr: false
+});</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">페이지 전용 라이브러리는 조건부 로드 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">GSAP 플러그인, Swiper, 차트, 캘린더 — 한 페이지에서만 쓰면서 전역 번들에 들어간 경우가 많습니다.</span>
+              <details><summary>코드</summary>
+<pre>if (document.querySelector('[data-scroll-section]')) {
+  const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+  gsap.registerPlugin(ScrollTrigger);
+}</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">script에 defer 또는 async <span class="tag tag--must">필수</span></span>
+              <span class="check__desc"><code>defer</code>는 순서 보장(대부분 이것), <code>async</code>는 독립 스크립트만. <code>&lt;head&gt;</code>에 속성 없는 <code>&lt;script&gt;</code>가 없는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">라우트 단위 프리페치 조정 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">Next.js <code>&lt;Link prefetch&gt;</code>는 기본 활성 — 링크가 아주 많은 목록 페이지에서는 과할 수 있습니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="case">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Barrel 파일 주의 <span class="tag tag--case">상황</span></span>
+              <span class="check__desc"><code>index.ts</code> 재export 하나만 import해도 전부 끌려오는 경우가 있습니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 03 서드파티 ============ -->
+    <section class="section" id="s3" aria-labelledby="s3-title">
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title" id="s3-title">서드파티 스크립트</h2>
+        <span class="section__metric">대부분 진짜 범인</span>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">열어보면 자사 코드는 멀쩡한데 채널톡·GTM·광고 태그 때문에 지표가 무너진 경우가 대부분입니다.</p>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">서드파티 목록화 + 용량 측정 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">DevTools → Network → 도메인별 정렬. GA/GTM, 채팅 위젯, 광고, 히트맵, 픽셀. <b>자사 번들보다 크지 않은지.</b></span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">로딩 전략 지정 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc"><code>afterInteractive</code>(분석 기본) · <code>lazyOnload</code>(채팅·히트맵). 정적 프로젝트는 <code>defer</code> + load 이후 삽입.</span>
+              <details><summary>코드</summary>
+<pre>import Script from 'next/script';
+&lt;Script src="..." strategy="lazyOnload" /&gt;</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">유튜브·지도 임베드는 facade 패턴 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">썸네일만 먼저 표시 → 클릭 시 실제 iframe 삽입. iframe 하나가 500KB 이상 나오지 않는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">영향도를 수치로 기록 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">퍼블 파트가 통제할 수 없는 영역이므로, "이 태그가 LCP를 1.2초 늦춥니다"라는 협상 근거를 남기는 게 목적입니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 04 INP ============ -->
+    <section class="section" id="s4" aria-labelledby="s4-title">
+      <div class="section__head">
+        <span class="section__num">04</span>
+        <h2 class="section__title" id="s4-title">실행 성능 — INP 개선</h2>
+        <span class="section__metric">INP</span>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+      <p class="section__desc">가장 어렵지만 가장 많이 실패하는 지표입니다.</p>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">50ms 넘는 긴 태스크 쪼개기 <span class="tag tag--must">필수</span></span>
+              <details><summary>코드</summary>
+<pre>for (const item of hugeList) {
+  process(item);
+  if (navigator.scheduling?.isInputPending()) {
+    await (scheduler.yield?.() ?? new Promise(r =&gt; setTimeout(r, 0)));
+  }
+}</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">고빈도 이벤트에 debounce / throttle <span class="tag tag--must">필수</span></span>
+              <span class="check__desc"><code>scroll</code>, <code>resize</code>, <code>mousemove</code>, 검색 입력. scroll/resize는 <code>requestAnimationFrame</code>으로 묶는 것이 더 정확합니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">스크롤 리스너에 passive: true <span class="tag tag--must">필수</span></span>
+              <span class="check__desc"><code>preventDefault()</code>를 쓰지 않는 리스너라면 필수. 모바일 스크롤 체감이 달라집니다.</span>
+              <details><summary>코드</summary>
+<pre>el.addEventListener('scroll', onScroll, { passive: true });</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">레이아웃 스래싱 제거 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">읽기/쓰기를 교차하면 매번 강제 리플로우. 읽기를 먼저 모으고 쓰기를 나중에 합니다.</span>
+              <details><summary>코드</summary>
+<pre><span class="r">// ❌ 읽기·쓰기 교차</span>
+els.forEach(el =&gt; { el.style.height = el.offsetHeight + 10 + 'px'; });
+<span class="g">// ✅ 읽기 먼저, 쓰기 나중</span>
+const hs = els.map(el =&gt; el.offsetHeight);
+els.forEach((el, i) =&gt; { el.style.height = hs[i] + 10 + 'px'; });</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">개별 리스너 대신 이벤트 위임 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">리스트 아이템 수백 개에 각각 리스너를 붙이지 않습니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">무거운 연산은 Web Worker로 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">대용량 파싱, 이미지 처리, 정렬/필터링.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="case">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">IntersectionObserver로 scroll 리스너 대체 <span class="tag tag--case">상황</span></span>
+              <span class="check__desc">등장 감지, 무한 스크롤, lazy 처리는 거의 전부 대체 가능합니다.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 05 React ============ -->
+    <section class="section" id="s5" aria-labelledby="s5-title">
+      <div class="section__head">
+        <span class="section__num">05</span>
+        <h2 class="section__title" id="s5-title">React / Next.js 특화</h2>
+        <span class="section__metric">INP</span>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">불필요한 리렌더 확인 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">React DevTools → Profiler → "Highlight updates when components render". 관계없는 컴포넌트가 같이 렌더되는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Zustand는 selector로 구독 <span class="tag tag--must">필수</span></span>
+              <details><summary>코드</summary>
+<pre><span class="r">// ❌ 스토어 전체 구독</span>
+const store = useStore();
+<span class="g">// ✅ 필요한 값만</span>
+const count = useStore(s =&gt; s.count);</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Server Component 우선, 'use client'는 최소 경계에 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">페이지 최상단에 <code>'use client'</code>가 붙어 트리 전체가 클라이언트로 넘어가지 않았는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">급하지 않은 업데이트는 useTransition <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">검색 필터링, 대량 리스트 정렬. 입력 반응성을 유지합니다.</span>
+              <details><summary>코드</summary>
+<pre>const [isPending, startTransition] = useTransition();
+startTransition(() =&gt; setFilter(value));</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">TanStack Query 캐시 설정 점검 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc"><code>staleTime</code> 미설정 시 불필요한 재요청. 서버 상태(Query)와 클라이언트 상태(Zustand)가 섞이지 않았는지.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">긴 리스트는 가상화 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">100개 이상 렌더 시 <code>@tanstack/react-virtual</code> 검토.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="case">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">useMemo / useCallback은 측정 후에 <span class="tag tag--case">상황</span></span>
+              <span class="check__desc">남용하면 오히려 메모리와 비교 비용이 늘어납니다. 프로파일러로 확인된 지점에만.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 06 GSAP ============ -->
+    <section class="section" id="s6" aria-labelledby="s6-title">
+      <div class="section__head">
+        <span class="section__num">06</span>
+        <h2 class="section__title" id="s6-title">GSAP / 애니메이션</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">transform / opacity만 애니메이션 <span class="tag tag--must">필수</span></span>
+              <details><summary>코드</summary>
+<pre>gsap.to(el, { x: 100 });      <span class="g">// ✅ 컴포지터 처리</span>
+gsap.to(el, { left: 100 });   <span class="r">// ❌ 매 프레임 리플로우</span></pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">인스턴스 cleanup <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">페이지 이동을 반복해도 <code>ScrollTrigger.getAll().length</code>가 누적되지 않는지.</span>
+              <details><summary>코드</summary>
+<pre>useGSAP(() =&gt; {
+  const st = ScrollTrigger.create({ /* ... */ });
+  return () =&gt; st.kill();
+}, { scope: containerRef });</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">ScrollTrigger 과다 생성 방지 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">리스트 아이템마다 개별 생성하면 스크롤마다 전부 계산합니다.</span>
+              <details><summary>코드</summary>
+<pre>ScrollTrigger.batch('.card', {
+  onEnter: batch =&gt; gsap.to(batch, { opacity: 1 })
+});</pre></details>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">scrub: true 대신 숫자값 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc"><code>scrub: 0.5</code> — 스무딩이 들어가면서 프레임 부하도 줄어듭니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">refresh() 호출 디바운스 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc"><code>resize</code>에서 직접 호출하지 않습니다. 모바일 주소창 높이 변화로 과도하게 트리거됩니다.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">matchMedia()로 조건부 초기화 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">모바일에서 불필요한 무거운 모션은 아예 생성하지 않습니다. <code>prefers-reduced-motion</code> 대응도 함께.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="case">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">will-change 남용 금지 <span class="tag tag--case">상황</span></span>
+              <span class="check__desc">GSAP이 자동 처리하므로 수동 지정 불필요. 남용 시 GPU 메모리 압박.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 07 빌드/배포 ============ -->
+    <section class="section" id="s7" aria-labelledby="s7-title">
+      <div class="section__head">
+        <span class="section__num">07</span>
+        <h2 class="section__title" id="s7-title">빌드 / 배포 설정</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">프로덕션 빌드에서 측정 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">개발 서버 기준 측정은 의미 없습니다 (소스맵, HMR, 미압축).</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">압축 활성화 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">Brotli 우선, gzip 폴백.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">정적 자산 캐시 헤더 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">해시 파일명 + <code>Cache-Control: max-age=31536000, immutable</code>.</span>
+            </span>
+          </label>
+        </li>
+
+        <li class="check" data-kind="rec">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">sideEffects: false 선언 <span class="tag tag--rec">권장</span></span>
+              <span class="check__desc">자체 패키지에서 tree shaking이 동작하도록. CSS import가 있으면 배열로 예외 지정.</span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 08 릴리스 전 ============ -->
+    <section class="section" id="s8" aria-labelledby="s8-title">
+      <div class="section__head">
+        <span class="section__num">08</span>
+        <h2 class="section__title" id="s8-title">릴리스 전 최종 확인</h2>
+        <span class="section__progress" data-section-progress></span>
+      </div>
+
+      <ul class="checks">
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">모바일 + Fast 3G + CPU 4x로 측정 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">프로덕션 빌드 기준.</span>
+            </span>
+          </label>
+        </li>
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Long Task 50ms 초과 항목이 남아 있는지 <span class="tag tag--must">필수</span></span>
+            </span>
+          </label>
+        </li>
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">주요 인터랙션 INP 200ms 이내 <span class="tag tag--must">필수</span> <span class="tag tag--metric">INP</span></span>
+              <span class="check__desc">메뉴 열기, 탭 전환, 검색, 폼 제출.</span>
+            </span>
+          </label>
+        </li>
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">번들 예산 초과 여부 <span class="tag tag--must">필수</span></span>
+            </span>
+          </label>
+        </li>
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">페이지 이동 반복 후 메모리 누수 없는지 <span class="tag tag--must">필수</span></span>
+              <span class="check__desc">DevTools → Memory → Heap snapshot 비교.</span>
+            </span>
+          </label>
+        </li>
+        <li class="check" data-kind="must">
+          <label class="check__main">
+            <input type="checkbox" class="check__box">
+            <span class="check__body">
+              <span class="check__title">Before/After 수치를 문서에 기록 <span class="tag tag--must">필수</span></span>
+            </span>
+          </label>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============ 부록 판단 기준 ============ -->
+    <section class="section" id="decision" aria-labelledby="decision-title">
+      <div class="section__head">
+        <span class="section__num">부록</span>
+        <h2 class="section__title" id="decision-title">판단 기준</h2>
+      </div>
+      <p class="section__desc">JS 최적화는 위에서부터 전부 하는 게 아니라, 측정 결과를 보고 해당하는 섹션만 골라 적용합니다.</p>
+
+      <div class="decision">
+        <div class="decision__card"><span class="decision__when">예상 못 한 모듈 1등</span><span class="decision__do">최우선 처리 → 01</span></div>
+        <div class="decision__card"><span class="decision__when">미사용 JS 50%↑</span><span class="decision__do">코드 스플리팅 → 02</span></div>
+        <div class="decision__card"><span class="decision__when">서드파티 &gt; 자사</span><span class="decision__do">로딩 전략부터 → 03</span></div>
+        <div class="decision__card"><span class="decision__when">INP만 나쁨</span><span class="decision__do">긴 태스크·핸들러 → 04·05</span></div>
+        <div class="decision__card"><span class="decision__when">LCP만 나쁨</span><span class="decision__do">JS보다 이미지·폰트 먼저</span></div>
+        <div class="decision__card"><span class="decision__when">CLS만 나쁨</span><span class="decision__do">JS 문제 아님 — 이미지 크기·폰트 메트릭</span></div>
+      </div>
+
+      <div class="note note--warn">
+        <b>성능은 "개선"이 아니라 "회귀 방지"가 본질입니다.</b>
+        한 번 최적화해도 다음 프로젝트에서 원위치됩니다. 성능 예산 + Lighthouse CI를 스타터 템플릿에 넣어
+        사람의 의지에 의존하지 않는 구조를 만드세요.
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:var(--space-4)">
+        <table class="tbl">
+          <caption>성능 예산 기준값</caption>
+          <thead><tr><th scope="col">항목</th><th scope="col">기준</th><th scope="col">경고</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">LCP</th><td>&lt; 2.5s</td><td>2.0s</td></tr>
+            <tr><th scope="row">INP</th><td>&lt; 200ms</td><td>160ms</td></tr>
+            <tr><th scope="row">CLS</th><td>&lt; 0.1</td><td>0.08</td></tr>
+            <tr><th scope="row">JS 번들</th><td>&lt; 200KB (gzip)</td><td>160KB</td></tr>
+            <tr><th scope="row">이미지 총량</th><td>&lt; 1MB / 페이지</td><td>800KB</td></tr>
+            <tr><th scope="row">웹폰트</th><td>&lt; 100KB</td><td>80KB</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <dl>
+        <dt>버전</dt><dd>1.0</dd>
+        <dt>기준</dt><dd>Core Web Vitals 2026</dd>
+        <dt>적용 범위</dt><dd>Next.js / React / 정적 HTML</dd>
+      </dl>
+      <p style="margin-top:var(--space-4)">
+        체크 상태는 이 창에서만 유지됩니다. 새로고침하면 초기화되므로, 점검 이력을 남기려면 브라우저 인쇄 기능으로 PDF 저장하세요.
+      </p>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.check__box'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.check'));
+  var fill = document.getElementById('progress-fill');
+  var count = document.getElementById('progress-count');
+  var currentFilter = 'all';
+
+  function updateProgress() {
+    var done = boxes.filter(function (b) { return b.checked; }).length;
+    var total = boxes.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+    fill.style.width = pct + '%';
+    count.innerHTML = '<b>' + done + '</b> / ' + total + ' 완료 · ' + pct + '%';
+
+    document.querySelectorAll('.section').forEach(function (sec) {
+      var slot = sec.querySelector('[data-section-progress]');
+      if (!slot) return;
+      var secBoxes = Array.prototype.slice.call(sec.querySelectorAll('.check__box'));
+      if (!secBoxes.length) return;
+      var secDone = secBoxes.filter(function (b) { return b.checked; }).length;
+      slot.textContent = secDone + ' / ' + secBoxes.length;
+      slot.style.color = (secDone === secBoxes.length) ? 'var(--c-green)' : 'var(--color-text-mute)';
+    });
+  }
+
+  function applyFilter(mode) {
+    currentFilter = mode;
+    items.forEach(function (item) {
+      var box = item.querySelector('.check__box');
+      var kind = item.dataset.kind;
+      var show = true;
+      if (mode === 'todo') show = !box.checked;
+      else if (mode === 'must') show = kind === 'must';
+      item.classList.toggle('is-hidden', !show);
+    });
+  }
+
+  boxes.forEach(function (box) {
+    box.addEventListener('change', function () {
+      updateProgress();
+      if (currentFilter === 'todo') applyFilter('todo');
+    });
+  });
+
+  document.querySelectorAll('.filters__btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filters__btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b === btn));
+      });
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    updateProgress();
+    applyFilter(currentFilter);
+  });
+
+  updateProgress();
+})();
+</script>
+
+</body>
+</html>

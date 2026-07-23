@@ -1,0 +1,40 @@
+@use '@/styles/abstracts/mixins' as *;
+
+.spacing-value {
+    text-align: center;
+}
+
+.radius-row {
+    display: flex;
+    gap: 2rem;
+  }
+  .radius-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.3rem;
+  }
+  .radius-box {
+     width: 10rem;
+     height: 5rem;
+     background: var(--color-gray-200);
+  }
+  .radius-context {
+    text-align: center;
+  }
+  
+  .elevation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem
+  }
+  
+  .elevation-card {
+     border:1px solid var(--color-border);
+     @include flex-c;
+     flex-direction: column;
+     padding: 1.6rem;
+     border-radius: 2rem;
+     font-size: 1.3rem;
+  
+  }

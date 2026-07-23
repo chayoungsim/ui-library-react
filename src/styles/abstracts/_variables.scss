@@ -1,33 +1,37 @@
-/**
- * Variables for the entire project.
- * This file contains all the global variables like colors, fonts, spacing, etc.
- * It should be imported first to be available for all other SCSS files.
- */
+ /* primitive */
+$color-sk-red : #EA002C;
+$color-sk-blue : #0072C6;
+$color-sk-teal : #009A93;
+$color-sk-navy : #0E306D;
+
+
 
 // 1. Colors
 // ==========================================================================
-$color-primary: #007bff;
+$color-primary: $color-sk-blue;
 $color-white: #fff;
 $color-black: #000;
+$color-error: #FF0000;
 
 // Grayscale - useful for text, backgrounds, borders
-$color-gray-100: #f8f9fa;
-$color-gray-200: #e9ecef; // Used in blockquote border
-$color-gray-300: #dee2e6;
-$color-gray-400: #ced4da;
-$color-gray-500: #adb5bd;
-$color-gray-600: #6c757d; // Used in blockquote text
-$color-gray-700: #495057;
-$color-gray-800: #343a40; // Close to body text color
-$color-gray-900: #212529;
+$color-gray-100: #f8f8f8;
+$color-gray-200: #eeeeee; // Used in blockquote border
+$color-gray-300: #dddddd;
+$color-gray-400: #bbbbbb;
+$color-gray-500: #999999;
+$color-gray-600: #777777; // Used in blockquote text
+$color-gray-700: #555555;
+$color-gray-800: #333333; // Close to body text color
+$color-gray-900: #111111;
 
 // Theme Colors
 $color-background: $color-white;
-$color-text: #333;
+$color-text: $color-black;
+$color-text-mute: #666666;
 $color-link: $color-primary;
-$color-border: $color-gray-200;
+$color-border: #f1f1f1;
 $color-border-light: $color-gray-100;
-$color-error: #dc3545;
+
 
 // 2. Fonts
 // ==========================================================================
@@ -37,10 +41,10 @@ $font-weight-bold: 700;
 
 // 3. Typography Scale (based on 1rem = 10px)
 // ==========================================================================
-$font-size-base: 1.6rem; // 16px
+$font-size-base: 1.8rem; // 18px
 
-$font-size-h1: 4.2rem;
-$font-size-h2: 3.2rem;
+$font-size-h1: 5.6rem;
+$font-size-h2: 3.6rem;
 $font-size-h3: 2.8rem;
 $font-size-h4: 2.2rem;
 
@@ -55,11 +59,10 @@ $border-width-base: 0.4rem;
 // 6. Radius
 // ==========================================================================
 $radius-none: 0;
-$radius-sm: 0.4rem;
-$radius-md: 0.8rem;
-$radius-lg: 1.2rem;
-$radius-xl: 1.6rem;
-$radius-full: 9999px;
+$radius-sm: 0.8rem;
+$radius-md: 1.4rem;
+$radius-lg: 2rem;
+$radius-xl: 3.2rem;
 $radius-circle: 50%;
 
 // 7. Paths

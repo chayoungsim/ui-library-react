@@ -5,7 +5,7 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
    * 버튼의 시각적 스타일을 결정합니다.
    * @default 'primary'
    */
-  variant?: 'primary' | 'secondary' | 'outline' | 'text'
+  variant?: 'primary' | 'secondary' | 'outline' | 'text' | 'textLine'
   /**
    * 버튼의 크기를 결정합니다.
    * @default 'md'

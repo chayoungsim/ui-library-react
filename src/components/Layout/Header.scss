@@ -11,6 +11,7 @@
 }
 .header-content {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
     height: var(--header-height);
@@ -24,6 +25,10 @@
         color: var(--color-text);
         font-size: 1.6rem;
         font-weight: 700;
+
+        &.active {
+            color: var(--color-primary);
+        }
     }
 
 }

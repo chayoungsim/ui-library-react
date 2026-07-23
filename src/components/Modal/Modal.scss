@@ -6,7 +6,7 @@
    Modal Component
    ========================================================================== */
 
-.modal__backdrop {
+.ui-modal__backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -18,7 +18,7 @@
   animation: modal-fade-in 0.2s ease;
 }
 
-.modal {
+.ui-modal {
   // --- 기본 구조 및 레이아웃 ---
   width: 100%;
   max-height: calc(100vh - 3.2rem);
@@ -51,7 +51,7 @@
    * 2. 내부 요소 (Elements)
    * ==========================================================================
    */
-  &__header {
+  &__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -68,6 +68,11 @@
 
   &__body {
     padding: 2rem;
+  }
+  &__foot {
+    padding: 2rem;
+    @include flex-c;
+    gap: 1rem;
   }
 }
 

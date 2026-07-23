@@ -1,45 +1,16 @@
 @use '@/styles/abstracts' as *;
 
 :root {
+
+  --radius-no: #{$radius-none};
   --radius-sm: #{$radius-sm};
   --radius-md: #{$radius-md};
   --radius-lg: #{$radius-lg};
   --radius-xl: #{$radius-xl};
-  --radius-full: #{$radius-full};
+  --radius-circle: #{$radius-circle};
 
   --shadow-card: rgba(0, 0, 0, 0.02) 0px 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 2px 6px, rgba(0, 0, 0, 0.1) 0px 4px 8px;
   --shadow-hover: rgba(0, 0, 0, 0.08) 0px 4px 12px;
   --near-black: #222222;
 }
 
-.radius-row {
-  display: flex;
-  gap: 2rem;
-}
-.radius-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 1.3rem;
-}
-.radius-box {
-   width: 10rem;
-   height: 5rem;
-   background: var(--color-gray-200);
-}
-
-.elevation-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem
-}
-
-.elevation-card {
-   border:1px solid var(--color-border);
-   @include flex-c;
-   flex-direction: column;
-   padding: 1.6rem;
-   border-radius: 2rem;
-   font-size: 1.3rem;
-
-}
